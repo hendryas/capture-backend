@@ -24,7 +24,6 @@
   <link href="<?= base_url('assets/plugins/flatpickr/flatpickr.min.css') ?>" rel="stylesheet">
   <link href="<?= base_url('assets/css/sweetalert2/sweetalert2.min.css') ?>" rel="stylesheet">
 
-
   <!-- Theme Styles -->
   <link href="<?= base_url('assets/css/main.min.css') ?>" rel="stylesheet">
   <link href="<?= base_url('assets/css/custom.css') ?>" rel="stylesheet">
@@ -33,6 +32,7 @@
   <link rel="icon" type="image/png" sizes="16x16" href="<?= base_url('assets/images/logo/logo-capture.png') ?>" />
 
   <script src="<?= base_url('assets/plugins/jquery/jquery-3.5.1.min.js') ?>"></script>
+  <script src="<?= base_url('assets/plugins/jquery-loading-overlay-2.1.7/dist/loadingoverlay.min.js') ?>"></script>
 
   <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
