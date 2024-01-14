@@ -38,4 +38,16 @@ class Category_model extends CI_Model
       return FALSE;
     }
   }
+
+  public function getDataCategoryByMerchant($id)
+  {
+    $this->db->select('a.nama_kategori,a.logo,b.*');
+    $this->db->where('a.delete_sts', 0);
+    $this->db->where('a.id_kategori', $id);
+    $this->db->from('kategori a');
+    $this->db->join('merchant b', 'a.id_kategori = b.id_kategori', 'left');
+
+    $query = $this->db->get();
+    return $query;
+  }
 }

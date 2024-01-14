@@ -10,12 +10,14 @@ class Merchant extends CI_Controller
     // is_logged_in();
     date_default_timezone_set('Asia/Jakarta');
     $this->load->model('Merchant_model', 'merchantModel');
+    $this->load->model('category/Category_model', 'categoryModel');
   }
 
   public function index()
   {
     $data['title'] = 'Merchant';
 
+    $data['data_categories'] = $this->categoryModel->getDataCategory()->result_array();
     $data['data_merchant'] = $this->merchantModel->getDataMerchant()->result_array();
     $this->load->view('templates/header/header', $data);
     $this->load->view('merchant/merchant', $data);
@@ -24,6 +26,7 @@ class Merchant extends CI_Controller
 
   public function insert_data()
   {
+    $id_kategori = htmlspecialchars($this->input->post('id_kategori'));
     $nama_merchant = htmlspecialchars($this->input->post('nama_merchant'));
     $deskripsi = htmlspecialchars($this->input->post('deskripsi'));
     $link_youtube = htmlspecialchars($this->input->post('link_youtube'));
@@ -50,6 +53,7 @@ class Merchant extends CI_Controller
         $this->upload->data();
 
         $data = [
+          'id_kategori' => $id_kategori,
           'nama_merchant' => $nama_merchant,
           'logo' => $new_image,
           'deskripsi' => $deskripsi,
@@ -91,6 +95,7 @@ class Merchant extends CI_Controller
 
   public function edit_data()
   {
+    $id_kategori = htmlspecialchars($this->input->post('id_kategori'));
     $id_merchant = htmlspecialchars($this->input->post('id_merchant'));
     $nama_merchant = htmlspecialchars($this->input->post('nama_merchant'));
     $deskripsi = htmlspecialchars($this->input->post('deskripsi'));
@@ -127,6 +132,7 @@ class Merchant extends CI_Controller
         $this->upload->data();
 
         $data = [
+          'id_kategori' => $id_kategori,
           'nama_merchant' => $nama_merchant,
           'logo' => $new_image,
           'deskripsi' => $deskripsi,
@@ -152,6 +158,7 @@ class Merchant extends CI_Controller
       }
     } else {
       $data = [
+        'id_kategori' => $id_kategori,
         'nama_merchant' => $nama_merchant,
         'logo' => $new_image,
         'deskripsi' => $deskripsi,

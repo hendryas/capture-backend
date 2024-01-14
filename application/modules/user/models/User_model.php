@@ -30,4 +30,15 @@ class User_model extends CI_Model
     $this->db->where('id_user', $id);
     $this->db->update('user', $data);
   }
+
+  public function getDataUserById($id)
+  {
+    $this->db->select('a.*');
+    $this->db->where('a.id_user', $id);
+    $this->db->where('delete_sts', 0);
+    $this->db->from('user a');
+
+    $query = $this->db->get();
+    return $query;
+  }
 }

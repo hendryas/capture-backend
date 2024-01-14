@@ -105,6 +105,15 @@
             <label for="nama_merchant" class="form-label">Nama Merchant</label>
             <input type="text" class="form-control" name="nama_merchant" id="nama_merchant" required>
           </div>
+          <div class="row mb-3 mt-3">
+            <label for="id_kategori" class="form-label">Kategori</label>
+            <select class="form-select" aria-label="Default select example" name="id_kategori">
+              <option value="">-- All --</option>
+              <?php foreach ($data_categories as $category) : ?>
+                <option value="<?= $category['id_kategori'] ?>"><?= $category['nama_kategori'] ?></option>
+              <?php endforeach; ?>
+            </select>
+          </div>
           <div class="row mb-3">
             <label for="logo" class="col-sm-2 col-form-label">Gambar Logo</label>
             <input class="form-control" type="file" accept="image/jpeg, image/png" placeholder="Input Gambar Barang" name="logo" id="logo">
@@ -143,6 +152,15 @@
                 <label for="nama_merchant" class="form-label">Nama Merchant</label>
                 <input type="hidden" name="id_merchant" id="id_merchant" value="<?= $merchant['id_merchant'] ?>">
                 <input type="text" class="form-control" name="nama_merchant" id="nama_merchant" value="<?= $merchant['nama_merchant'] ?>" required>
+              </div>
+              <div class="row mb-3 mt-3">
+                <label for="id_kategori" class="form-label">Kategori</label>
+                <select class="form-select" aria-label="Default select example" name="id_kategori">
+                  <option value="">-- All --</option>
+                  <?php foreach ($data_categories as $category) : ?>
+                    <option value="<?= $category['id_kategori'] ?>" <?= $selected = $category['id_kategori'] == $merchant['id_kategori'] ? 'selected' : '' ?>><?= $category['nama_kategori'] ?></option>
+                  <?php endforeach; ?>
+                </select>
               </div>
               <div class="row mt-3">
                 <label for="preview" class="col-sm-2 col-form-label">Preview</label>
@@ -191,6 +209,7 @@
   <script>
     $("button[name='btnSubmit']").click(function(e) {
       e.preventDefault();
+      let id_kategori = $("select[name=id_kategori]").val().trim();
       let nama_merchant = $("input[name=nama_merchant]").val().trim();
       let deskripsi = $("textarea[name=deskripsi]").val().trim();
       let link_youtube = $("input[name=link_youtube]").val().trim();
@@ -198,6 +217,7 @@
       let cek_gambar = logo[0].files[0];
 
       let formData = new FormData();
+      formData.append("id_kategori", id_kategori);
       formData.append("nama_merchant", nama_merchant);
       formData.append("deskripsi", deskripsi);
       formData.append("link_youtube", link_youtube);
