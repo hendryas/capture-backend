@@ -89,7 +89,7 @@ $autoload['drivers'] = array();
 |
 |	$autoload['helper'] = array('url', 'file');
 */
-$autoload['helper'] = array('url', 'file', 'form', 'loggedin', 'security', 'string', 'fungsi'); // , 'checkaccess'
+$autoload['helper'] = array('url', 'file', 'form', 'loggedin', 'security', 'string', 'fungsi', 'jwt'); // , 'checkaccess'
 
 /*
 | -------------------------------------------------------------------

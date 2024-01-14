@@ -41,4 +41,18 @@ class User_model extends CI_Model
     $query = $this->db->get();
     return $query;
   }
+
+  public function updateDataUserById($id, $data)
+  {
+    $this->db->where('id_user', $id);
+    $this->db->update('user', $data);
+
+    $update = $this->db->affected_rows();
+
+    if ($update == 1) {
+      return TRUE;
+    } else {
+      return FALSE;
+    }
+  }
 }

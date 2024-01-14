@@ -52,37 +52,116 @@ class Users extends MX_Controller
     }
   }
 
-  public function index_put()
+  public function index_post()
   {
-    $id = $this->get('id');
+    $id = $this->post('id');
 
-    $nama = htmlspecialchars($this->input->post('nama'));
-    $username = htmlspecialchars($this->input->post('username'));
-    $email = htmlspecialchars($this->input->post('email'));
-    $phone = htmlspecialchars($this->input->post('phone'));
-    $password = htmlspecialchars($this->input->post('password'));
+    $nama = $this->post('nama');
+    $username = $this->post('username');
+    $email = $this->post('email');
+    $phone = $this->post('phone');
+    $password =  $this->post('password');
     $updated_at = date('Y-m-d H:i:s');
 
-    if ($password != '' || $password != null) {
-      $password_hash = password_hash($password, PASSWORD_DEFAULT);
-      $data = [
-        'nama' => $nama,
-        'username' => $username,
-        'email' => $email,
-        'password' => $password_hash,
-        'phone' => $phone,
-        'updated_at' => $updated_at
-      ];
-    } else {
-      $data = [
-        'nama' => $nama,
-        'username' => $username,
-        'email' => $email,
-        'phone' => $phone,
-        'updated_at' => $updated_at
-      ];
+    $foto_user = isset($_FILES['foto_user']) ? $_FILES['foto_user']['name'] : '';
+
+    $his    = date("His");
+    $thbl   = date("Ymd");
+
+    if ($foto_user != null || $foto_user != "") {
+      $foto_user = explode(".", $_FILES['foto_user']['name']);
+      $ext = end($foto_user);
+      $new_image = $_FILES['foto_user']['name'] = strtolower('foto_user' . '_' . $thbl . '-' . $his . '.' . $ext);
     }
-    var_dump($data);
-    die;
+
+    if ($foto_user != null || $foto_user != "") {
+      $file_name1 = 'foto_user' . '_' . $thbl . '-' . $his;
+      $config1['upload_path']          = './assets/images/avatars/';
+      $config1['allowed_types']        = 'jpg|png|jpeg';
+      $config1['max_size']             = 3023;
+      $config1['remove_space']         = TRUE;
+      $config1['file_name']            = $file_name1;
+
+      $this->load->library('upload', $config1);
+
+      if ($this->upload->do_upload('foto_user')) {
+        $this->upload->data();
+
+        if ($password != '' || $password != null) {
+          $password_hash = password_hash($password, PASSWORD_DEFAULT);
+          $data = [
+            'nama' => $nama,
+            'username' => $username,
+            'email' => $email,
+            'password' => $password_hash,
+            'phone' => $phone,
+            'foto_user' => $new_image,
+            'updated_at' => $updated_at
+          ];
+        } else {
+          $data = [
+            'nama' => $nama,
+            'username' => $username,
+            'email' => $email,
+            'phone' => $phone,
+            'foto_user' => $new_image,
+            'updated_at' => $updated_at
+          ];
+        }
+
+        $qryUpdate = $this->userModel->updateDataUserById($id, $data);
+
+        if ($qryUpdate == 1) {
+          $this->response([
+            'status' => true,
+            'message' => 'Berhasil update profile user!'
+          ], 200);
+        } else {
+          $this->response([
+            'status' => false,
+            'message' => 'Query ubah data gagal!'
+          ], 404);
+        }
+      } else {
+        $this->response([
+          'status' => false,
+          'message' => 'Query ubah data gagal dan gagal insert gambar!'
+        ], 404);
+      }
+    } else {
+      if ($password != '' || $password != null) {
+        $password_hash = password_hash($password, PASSWORD_DEFAULT);
+        $data = [
+          'nama' => $nama,
+          'username' => $username,
+          'email' => $email,
+          'password' => $password_hash,
+          'phone' => $phone,
+          'updated_at' => $updated_at
+        ];
+      } else {
+        $data = [
+          'nama' => $nama,
+          'username' => $username,
+          'email' => $email,
+          'phone' => $phone,
+          'updated_at' => $updated_at
+        ];
+      }
+
+      $qryUpdate = $this->userModel->updateDataUserById($id, $data);
+
+      if ($qryUpdate == 1) {
+        $this->response([
+          'status' => true,
+          'message' => 'Berhasil update profile user!'
+        ], 200);
+      } else {
+        $this->response([
+          'status' => false,
+          'message' => 'Query ubah data tanpa ubah password gagal!'
+        ], 404);
+      }
+    }
   }
 }

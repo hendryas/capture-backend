@@ -1,7 +1,8 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
-class Welcome extends CI_Controller {
+class Welcome extends CI_Controller
+{
 
 	/**
 	 * Index Page for this controller.
@@ -23,5 +24,18 @@ class Welcome extends CI_Controller {
 		$this->load->helper('url');
 
 		$this->load->view('welcome_message');
+	}
+
+	public function token()
+	{
+		$jwt = new JWT();
+		$JwtSecretKey = "KMZWA8AWAA";
+		$data = [
+			'userId' => 12345,
+			'email' => 'jwt@example.com',
+			'userType' => 'admin'
+		];
+		$token = $jwt->encode($data, $JwtSecretKey, 'HS256');
+		echo $token;
 	}
 }
