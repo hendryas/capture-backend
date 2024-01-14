@@ -23,6 +23,7 @@
   <link href="<?= base_url('assets/plugins/pace/pace.css') ?>" rel="stylesheet">
   <link href="<?= base_url('assets/plugins/flatpickr/flatpickr.min.css') ?>" rel="stylesheet">
   <link href="<?= base_url('assets/css/sweetalert2/sweetalert2.min.css') ?>" rel="stylesheet">
+  <link href="<?= base_url('assets/plugins/select2/css/select2.min.css') ?>" rel="stylesheet">
 
   <!-- Theme Styles -->
   <link href="<?= base_url('assets/css/main.min.css') ?>" rel="stylesheet">

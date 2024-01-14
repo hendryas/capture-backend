@@ -9,6 +9,8 @@
 <script src="<?= base_url('assets/plugins/flatpickr/flatpickr.js') ?>"></script>
 <script src="<?= base_url('assets/js/pages/datepickers.js') ?>"></script>
 <script src="<?= base_url('assets/js/sweetalert2/sweetalert2.all.min.js') ?>"></script>
+<script src="<?= base_url('assets/plugins/select2/js/select2.full.min.js') ?>"></script>
+<script src="<?= base_url('assets/js/pages/select2.js') ?>"></script>
 </body>
 
 </html>
