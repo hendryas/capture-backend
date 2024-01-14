@@ -38,4 +38,12 @@ class Merchant_model extends CI_Model
       return FALSE;
     }
   }
+
+  public function searchDataMerchant($search)
+  {
+    $qry = "SELECT * FROM merchant WHERE nama_merchant LIKE '%$search%' and delete_sts = 0";
+    $execute = $this->db->query($qry);
+    $query = $execute;
+    return $query;
+  }
 }

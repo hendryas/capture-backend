@@ -19,6 +19,9 @@ class Merchant extends MX_Controller
     parent::__construct();
     $this->__resTraitConstruct();
 
+    date_default_timezone_set('Asia/Jakarta');
+    $this->load->model('merchant/Merchant_model', 'merchantModel');
+
     // Configure limits on our controller methods
     // Ensure you have created the 'limits' table and enabled 'limits' within application/config/rest.php
     $this->methods['users_get']['limit'] = 500; // 500 requests per hour per user/key
@@ -28,6 +31,23 @@ class Merchant extends MX_Controller
 
   public function index_get()
   {
-    echo "test merchant";
+  }
+
+  public function index_post()
+  {
+    $search_studio = $this->post('search_studio');
+    $qry_merchant = $this->merchantModel->searchDataMerchant($search_studio)->result_array();
+
+    if ($qry_merchant) {
+      $this->response([
+        'status' => true,
+        'data' => $qry_merchant
+      ], 200);
+    } else {
+      $this->response([
+        'status' => false,
+        'message' => 'data tidak ada!'
+      ], 404);
+    }
   }
 }
