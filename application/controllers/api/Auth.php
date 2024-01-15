@@ -7,7 +7,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 require APPPATH . 'libraries/REST_Controller.php';
 require APPPATH . 'libraries/Format.php';
 
-class Login extends MX_Controller
+class Auth extends MX_Controller
 {
   use REST_Controller {
     REST_Controller::__construct as private __resTraitConstruct;
@@ -22,6 +22,7 @@ class Login extends MX_Controller
     date_default_timezone_set('Asia/Jakarta');
     $this->load->model('user/User_model', 'userModel');
     $this->load->library('form_validation');
+    $this->load->library('Authorization_Token');
 
     // Configure limits on our controller methods
     // Ensure you have created the 'limits' table and enabled 'limits' within application/config/rest.php
@@ -30,7 +31,7 @@ class Login extends MX_Controller
     $this->methods['users_delete']['limit'] = 50; // 50 requests per hour per user/key
   }
 
-  public function index_post()
+  public function login_post()
   {
     // Set validation rules
     $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
@@ -51,15 +52,13 @@ class Login extends MX_Controller
       $user = $this->userModel->getDataUserByEmail($email)->row_array();
       if ($user) {
         if (password_verify($password, $user['password'])) {
-          $jwt = new JWT();
-          $JwtSecretKey = "KMZWA8AWAA";
-          $data = [
+          $payload = [
             'id_user' => $user['id_user'],
             'email' => $user['email'],
             'id_role' => $user['id_role'],
             'nama' => $user['nama']
           ];
-          $token = $jwt->encode($data, $JwtSecretKey, 'HS256');
+          $token = $this->authorization_token->generateToken($payload);
           $this->response(['status' => true, 'token' => $token], 200);
         } else {
           $this->response(['status' => false, 'error' => ['email' => 'Invalid password']], 402);
