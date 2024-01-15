@@ -38,4 +38,15 @@ class PackageMerchant_model extends CI_Model
       return FALSE;
     }
   }
+
+  public function getDataPackageMerchantById($id)
+  {
+    $this->db->select('a.nama_service');
+    $this->db->where('delete_sts', 0);
+    $this->db->where('id_merchant', $id);
+    $this->db->from('packagemerchant a');
+
+    $query = $this->db->get();
+    return $query;
+  }
 }

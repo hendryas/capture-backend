@@ -46,4 +46,15 @@ class Merchant_model extends CI_Model
     $query = $execute;
     return $query;
   }
+
+  public function getDataMerchantById($id)
+  {
+    $this->db->select('a.nama_merchant,a.logo,a.deskripsi,a.link_youtube,a.total_harga_package_merchant');
+    $this->db->where('a.delete_sts', 0);
+    $this->db->where('a.id_merchant', $id);
+    $this->db->from('merchant a');
+
+    $query = $this->db->get();
+    return $query;
+  }
 }

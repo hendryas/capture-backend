@@ -21,6 +21,7 @@ class Merchant extends MX_Controller
 
     date_default_timezone_set('Asia/Jakarta');
     $this->load->model('merchant/Merchant_model', 'merchantModel');
+    $this->load->model('packagemerchant/PackageMerchant_model', 'packageModel');
 
     // Configure limits on our controller methods
     // Ensure you have created the 'limits' table and enabled 'limits' within application/config/rest.php
@@ -31,6 +32,50 @@ class Merchant extends MX_Controller
 
   public function index_get()
   {
+    $id = $this->get('id');
+    if ($id === null) {
+      $merchant = $this->merchantModel->getDataMerchant()->result_array();
+    } else {
+      $merchant = $this->merchantModel->getDataMerchantById($id)->row_array();
+      $package_merchant = $this->packageModel->getDataPackageMerchantById($id)->result_array();
+    }
+
+    if ($package_merchant) {
+      $data = [
+        'data_merchant' => $merchant,
+        'data_packagemerchant' => $package_merchant,
+      ];
+    } else {
+      $data = [
+        'data_merchant' => $merchant
+      ];
+    }
+
+    if ($package_merchant) {
+      if ($merchant) {
+        $this->response([
+          'status' => true,
+          'data' => $data
+        ], 200);
+      } else {
+        $this->response([
+          'status' => false,
+          'message' => 'id tidak ditemukan'
+        ], 404);
+      }
+    } else {
+      if ($merchant) {
+        $this->response([
+          'status' => true,
+          'data' => $data
+        ], 200);
+      } else {
+        $this->response([
+          'status' => false,
+          'message' => 'id tidak ditemukan'
+        ], 404);
+      }
+    }
   }
 
   public function index_post()
