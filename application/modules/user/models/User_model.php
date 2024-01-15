@@ -66,4 +66,15 @@ class User_model extends CI_Model
       return FALSE;
     }
   }
+
+  public function getDataUserByEmail($email)
+  {
+    $this->db->select('a.*');
+    $this->db->where('a.email', $email);
+    $this->db->where('delete_sts', 0);
+    $this->db->from('user a');
+
+    $query = $this->db->get();
+    return $query;
+  }
 }
