@@ -24,6 +24,7 @@ class Categories extends MX_Controller
     $this->__resTraitConstruct();
 
     date_default_timezone_set('Asia/Jakarta');
+    $this->load->library('Authorization_Token');	
     $this->load->model('category/Category_model', 'categoryModel');
 
     $this->methods['users_get']['limit'] = 500; // 500 requests per hour per user/key
@@ -33,23 +34,36 @@ class Categories extends MX_Controller
 
   public function index_get()
   {
-    $id = $this->get('id');
-    if ($id === null) {
-      $categories = $this->categoryModel->getDataCategory()->result_array();
-    } else {
-      $categories = $this->categoryModel->getDataCategoryByMerchant($id)->result_array();
-    }
+    $headers = $this->input->request_headers(); 
+    if (isset($headers['Authorization'])) {
+      $decodedToken = $this->authorization_token->validateToken($headers['Authorization']);
+      if ($decodedToken['status']) {
+        // Logic Start Here
+        $id = $this->get('id');
+        if ($id === null) {
+          $categories = $this->categoryModel->getDataCategory()->result_array();
+        } else {
+          $categories = $this->categoryModel->getDataCategoryByMerchant($id)->result_array();
+        }
+    
+        if ($categories) {
+          $this->response([
+            'status' => true,
+            'data' => $categories
+          ], 200);
+        } else {
+          $this->response([
+            'status' => false,
+            'message' => 'id tidak ditemukan'
+          ], 404);
+        }
 
-    if ($categories) {
-      $this->response([
-        'status' => true,
-        'data' => $categories
-      ], 200);
+        // Logic End
+      } else {
+          $this->response($decodedToken);
+      }
     } else {
-      $this->response([
-        'status' => false,
-        'message' => 'id tidak ditemukan'
-      ], 404);
-    }
+      $this->response(['status' => false, 'message' => 'Authentication failed'], 403);
+    }   
   }
 }

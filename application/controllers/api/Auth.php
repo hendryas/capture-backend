@@ -21,7 +21,6 @@ class Auth extends MX_Controller
 
     date_default_timezone_set('Asia/Jakarta');
     $this->load->model('user/User_model', 'userModel');
-    $this->load->library('form_validation');
     $this->load->library('Authorization_Token');
 
     // Configure limits on our controller methods
@@ -68,4 +67,10 @@ class Auth extends MX_Controller
       }
     }
   }
+
+  public function register_post(){
+      // TODO : ..
+  }
+
+
 }
