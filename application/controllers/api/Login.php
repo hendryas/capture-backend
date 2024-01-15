@@ -21,6 +21,7 @@ class Login extends MX_Controller
 
     date_default_timezone_set('Asia/Jakarta');
     $this->load->model('user/User_model', 'userModel');
+    $this->load->library('form_validation');
 
     // Configure limits on our controller methods
     // Ensure you have created the 'limits' table and enabled 'limits' within application/config/rest.php
@@ -31,43 +32,41 @@ class Login extends MX_Controller
 
   public function index_post()
   {
+    // Set validation rules
+    $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
+    $this->form_validation->set_rules('password', 'Password', 'required|min_length[8]');
     $email = $this->post('email');
     $password = $this->post('password');
 
     $user = $this->userModel->getDataUserByEmail($email)->row_array();
 
-    if ($user) {
-      if ($user['is_active'] == 1) {
+    if ($this->form_validation->run() == FALSE) {
+      // Validation failed
+      $this->response(['status' => false, 'error' => $this->form_validation->error_array()], 402);
+    } else {
+      // Validation passed, proceed with authentication
+      $email = $this->input->post('email');
+      $password = $this->input->post('password');
+      
+      $user = $this->userModel->getDataUserByEmail($email)->row_array();
+      if ($user) {
         if (password_verify($password, $user['password'])) {
+          $jwt = new JWT();
+          $JwtSecretKey = "KMZWA8AWAA";
           $data = [
             'id_user' => $user['id_user'],
             'email' => $user['email'],
             'id_role' => $user['id_role'],
             'nama' => $user['nama']
           ];
-          $this->session->set_userdata($data);
-
-          $this->response([
-            'status' => true,
-            'data' => $data
-          ], 200);
+          $token = $jwt->encode($data, $JwtSecretKey, 'HS256');
+          $this->response(['status' => true, 'token' => $token], 200);
         } else {
-          $this->response([
-            'status' => false,
-            'message' => 'Password Salah!'
-          ], 404);
+          $this->response(['status' => false, 'error' => ['email' => 'Invalid password']], 402);
         }
       } else {
-        $this->response([
-          'status' => false,
-          'message' => 'E-mail ini belum di aktivasi!'
-        ], 404);
+        $this->response(['status' => false, 'error' => ['email' => 'Invalid email']], 402);
       }
-    } else {
-      $this->response([
-        'status' => false,
-        'message' => 'E-mail belum terdaftar!'
-      ], 404);
     }
   }
 }

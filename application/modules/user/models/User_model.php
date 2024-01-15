@@ -12,17 +12,6 @@ class User_model extends CI_Model
     return $query;
   }
 
-  public function getUserByEmail($email)
-  {
-    $this->db->where('email', $email);
-    $this->db->where('delete_sts', 0);
-    $this->db->from('user');
-    $query = $this->db->get();
-
-    return $query->row_array(); 
-
-  }
-
   public function insertData($data)
   {
     $this->db->insert('user', $data);
