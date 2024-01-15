@@ -76,7 +76,7 @@ class Users extends MX_Controller
 
     if ($foto_user != null || $foto_user != "") {
       $file_name1 = 'foto_user' . '_' . $thbl . '-' . $his;
-      $config1['upload_path']          = './assets/images/avatars/';
+      $config1['upload_path']          = './assets/images/uplouds/';
       $config1['allowed_types']        = 'jpg|png|jpeg';
       $config1['max_size']             = 3023;
       $config1['remove_space']         = TRUE;
