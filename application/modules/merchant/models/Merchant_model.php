@@ -71,4 +71,15 @@ class Merchant_model extends CI_Model
       return FALSE;
     }
   }
+
+  public function getDataRekomendasiMerchant()
+  {
+    $this->db->select('a.*');
+    $this->db->where('delete_sts', 0);
+    $this->db->where('sts_rekomendasi', 1);
+    $this->db->from('merchant a');
+
+    $query = $this->db->get();
+    return $query;
+  }
 }

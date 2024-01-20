@@ -7,7 +7,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 require APPPATH . 'libraries/REST_Controller.php';
 require APPPATH . 'libraries/Format.php';
 
-class Merchant extends MX_Controller
+class RekomendasiMerchant extends MX_Controller
 {
   use REST_Controller {
     REST_Controller::__construct as private __resTraitConstruct;
@@ -35,7 +35,7 @@ class Merchant extends MX_Controller
     $id = $this->get('id');
     $package_merchant = "";
     if ($id === null) {
-      $merchant = $this->merchantModel->getDataMerchant()->result_array();
+      $merchant = $this->merchantModel->getDataRekomendasiMerchant()->result_array();
     } else {
       $merchant = $this->merchantModel->getDataMerchantById($id)->row_array();
       $package_merchant = $this->packageModel->getDataPackageMerchantById($id)->result_array();
@@ -76,24 +76,6 @@ class Merchant extends MX_Controller
           'message' => 'id tidak ditemukan'
         ], 404);
       }
-    }
-  }
-
-  public function index_post()
-  {
-    $search_studio = $this->post('search_studio');
-    $qry_merchant = $this->merchantModel->searchDataMerchant($search_studio)->result_array();
-
-    if ($qry_merchant) {
-      $this->response([
-        'status' => true,
-        'data' => $qry_merchant
-      ], 200);
-    } else {
-      $this->response([
-        'status' => false,
-        'message' => 'data tidak ada!'
-      ], 404);
     }
   }
 }
