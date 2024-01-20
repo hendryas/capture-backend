@@ -32,50 +32,25 @@ class RekomendasiMerchant extends MX_Controller
 
   public function index_get()
   {
-    $id = $this->get('id');
-    $package_merchant = "";
-    if ($id === null) {
-      $merchant = $this->merchantModel->getDataRekomendasiMerchant()->result_array();
-    } else {
-      $merchant = $this->merchantModel->getDataMerchantById($id)->row_array();
-      $package_merchant = $this->packageModel->getDataPackageMerchantById($id)->result_array();
-    }
+    $page = $this->input->get('page') ? $this->input->get('page') : 1;
+    $limit = 20; // Jumlah data per halaman
 
-    if ($package_merchant) {
-      $data = [
-        'data_merchant' => $merchant,
-        'data_packagemerchant' => $package_merchant,
-      ];
-    } else {
-      $data = [
-        'data_merchant' => $merchant
-      ];
-    }
+    $offset = ($page - 1) * $limit;
 
-    if ($package_merchant) {
-      if ($merchant) {
-        $this->response([
-          'status' => true,
-          'data' => $data
-        ], 200);
-      } else {
-        $this->response([
-          'status' => false,
-          'message' => 'id tidak ditemukan'
-        ], 404);
-      }
-    } else {
-      if ($merchant) {
-        $this->response([
-          'status' => true,
-          'data' => $data
-        ], 200);
-      } else {
-        $this->response([
-          'status' => false,
-          'message' => 'id tidak ditemukan'
-        ], 404);
-      }
-    }
+    $merchants = $this->merchantModel->getDataRekomendasiMerchant($limit, $offset)->result_array();
+    $total_rows = count($merchants);
+
+    $total_pages = ceil($total_rows / $limit);
+
+    $this->response([
+      'status' => true,
+      'message' => 'Data rekomendasi merchant berhasil!',
+      'data' => $merchants,
+      'pagination' => array(
+        'total_pages' => $total_pages,
+        'current_page' => $page,
+        'total_rows' => $total_rows
+      )
+    ], 200);
   }
 }

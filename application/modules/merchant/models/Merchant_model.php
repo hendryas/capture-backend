@@ -72,8 +72,9 @@ class Merchant_model extends CI_Model
     }
   }
 
-  public function getDataRekomendasiMerchant()
+  public function getDataRekomendasiMerchant($limit, $offset)
   {
+    $this->db->limit($limit, $offset);
     $this->db->select('a.*');
     $this->db->where('delete_sts', 0);
     $this->db->where('sts_rekomendasi', 1);
@@ -81,5 +82,19 @@ class Merchant_model extends CI_Model
 
     $query = $this->db->get();
     return $query;
+  }
+
+  public function getMerchants($limit, $offset)
+  {
+    // Query untuk mengambil data merchant sesuai halaman dan jumlah data per halaman
+    $this->db->limit($limit, $offset);
+    $query = $this->db->get('merchant'); // Gantilah 'merchants' dengan nama tabel yang sesuai
+    return $query->result();
+  }
+
+  public function countMerchants()
+  {
+    // Query untuk menghitung jumlah total data merchant
+    return $this->db->count_all('merchant'); // Gantilah 'merchants' dengan nama tabel yang sesuai
   }
 }
