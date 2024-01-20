@@ -32,56 +32,5 @@ class Register extends MX_Controller
 
   public function index_post()
   {
-    $nama = $this->post('nama');
-    $email = $this->post('email');
-    $password = $this->post('password');
-    $confirm_password = $this->post('confirm_password');
-
-    $this->form_validation->set_rules('nama', 'Nama', 'required|trim', [
-      'required' => 'Nama tidak boleh kosong.'
-    ]);
-
-    $this->form_validation->set_rules('email', 'Email', 'required|trim|is_unique[user.email]', [
-      'required' => 'Email tidak boleh kosong.',
-      'is_unique' => 'Email ini sudah terdaftar!'
-    ]);
-
-    $this->form_validation->set_rules('password', 'Password', 'required|trim|min_length[8]|matches[confirm_password]', [ //bener
-      'matches' => 'Password tidak sama!',
-      'min_length' => 'Password terlalu pendek!',
-      'required' => 'Password tidak boleh kosong.',
-    ]);
-
-    $this->form_validation->set_rules('confirm_password', 'Password', 'required|trim|matches[password]', [ //bener
-      'required' => 'Password tidak boleh kosong.',
-      'matches' => 'Password tidak sama!',
-    ]);
-
-    $password = password_hash($confirm_password, PASSWORD_DEFAULT);
-
-    $cekEmail = $this->registerModel->cekEmailAuth($email)->result();
-    $isEmail = count($cekEmail);
-
-    if ($isEmail > 0) {
-      $this->response([
-        'status' => false,
-        'message' => 'Email sudah pernah dibuat!'
-      ], 404);
-    } else {
-      $data = [
-        'nama' => $nama,
-        'email' => $email,
-        'password' => $password,
-        'id_role' => 3,
-        'is_active' => 1,
-        'delete_sts' => 0,
-        'created_at' => date('Y-m-d H:i:s')
-      ];
-      $this->registerModel->insertDataRegister($data);
-      $this->response([
-        'status' => true,
-        'message' => 'Berhasil Registrasi Akun'
-      ], 200);
-    }
   }
 }

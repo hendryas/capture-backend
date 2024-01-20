@@ -57,4 +57,18 @@ class Merchant_model extends CI_Model
     $query = $this->db->get();
     return $query;
   }
+
+  public function insertRekomendasiMerchant($data, $id)
+  {
+    $this->db->where('id_merchant', $id);
+    $this->db->update('merchant', $data);
+
+    $update = $this->db->affected_rows();
+
+    if ($update == 1) {
+      return TRUE;
+    } else {
+      return FALSE;
+    }
+  }
 }

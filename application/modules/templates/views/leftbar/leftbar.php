@@ -34,6 +34,9 @@
             <a href="<?= base_url('category') ?>">Kategori</a>
           </li>
           <li>
+            <a href="<?= base_url('merchant/rekomendasimerchant') ?>">Rekomendasi Merchant</a>
+          </li>
+          <li>
             <a href="#">Authentication<i class="material-icons has-sub-menu">keyboard_arrow_right</i></a>
             <ul class="sub-menu">
               <li>

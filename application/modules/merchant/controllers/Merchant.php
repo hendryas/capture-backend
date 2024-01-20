@@ -207,4 +207,70 @@ class Merchant extends CI_Controller
     );
     echo json_encode($response);
   }
+
+  public function rekomendasi_merchant()
+  {
+    $data['title'] = 'Rekomendasi Merchant';
+
+    $data['data_merchant'] = $this->merchantModel->getDataMerchant()->result_array();
+    $this->load->view('templates/header/header', $data);
+    $this->load->view('merchant/rekomendasimerchant', $data);
+    $this->load->view('templates/footer/footer', $data);
+  }
+
+  public function insert_rekomendasi_merchant()
+  {
+    $id_merchant = htmlspecialchars($this->input->post('id_merchant'));
+
+    $data = [
+      'sts_rekomendasi' => 1,
+    ];
+
+    $qry_insert = $this->merchantModel->insertRekomendasiMerchant($data, $id_merchant);
+
+    if ($qry_insert == 1) {
+      $status = "OK";
+      $message = "Berhasil Ubah Status Rekomendasi!";
+      $log = "";
+    } else {
+      $status = "ERROR";
+      $message = "Query Ubah Status Data Gagal!";
+      $log = "";
+    }
+
+    $response = array(
+      "status" => $status,
+      "message" => $message,
+      "log" => $log
+    );
+    echo json_encode($response);
+  }
+
+  public function update_dont_rekomendasi_merchant()
+  {
+    $id_merchant = htmlspecialchars($this->input->post('id_merchant'));
+
+    $data = [
+      'sts_rekomendasi' => 0,
+    ];
+
+    $qry_insert = $this->merchantModel->insertRekomendasiMerchant($data, $id_merchant);
+
+    if ($qry_insert == 1) {
+      $status = "OK";
+      $message = "Berhasil Ubah Status Rekomendasi!";
+      $log = "";
+    } else {
+      $status = "ERROR";
+      $message = "Query Ubah Status Data Gagal!";
+      $log = "";
+    }
+
+    $response = array(
+      "status" => $status,
+      "message" => $message,
+      "log" => $log
+    );
+    echo json_encode($response);
+  }
 }
