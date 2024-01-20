@@ -32,21 +32,31 @@ class Auth extends MX_Controller
 
   public function login_post()
   {
+    $content_type = $this->input->server('HTTP_CONTENT_TYPE', true);
+    $data = [];
+
+    if (stripos($content_type, 'application/json') !== false) {
+      // Pengolahan JSON
+      $json_input = file_get_contents('php://input');
+      $data = json_decode($json_input, true);
+    } elseif (stripos($content_type, 'multipart/form-data') !== false) {
+      // Pengolahan form-data
+      $data['email'] = $this->input->post('email');
+      $data['password'] = $this->input->post('password');
+    }
+
     // Set validation rules
+    $this->form_validation->set_data($data);
     $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
     $this->form_validation->set_rules('password', 'Password', 'required|min_length[8]');
-    $email = $this->post('email');
-    $password = $this->post('password');
-
-    $user = $this->userModel->getDataUserByEmail($email)->row_array();
 
     if ($this->form_validation->run() == FALSE) {
       // Validation failed
       $this->response(['status' => false, 'error' => $this->form_validation->error_array()], 422);
     } else {
       // Validation passed, proceed with authentication
-      $email = $this->input->post('email');
-      $password = $this->input->post('password');
+      $email = $data['email'];
+      $password = $data['password'];
 
       $user = $this->userModel->getDataUserByEmail($email)->row_array();
       if ($user) {
@@ -60,7 +70,7 @@ class Auth extends MX_Controller
           $token = $this->authorization_token->generateToken($payload);
           $this->response(['status' => true, 'token' => $token], 200);
         } else {
-          $this->response(['status' => false, 'error' => ['email' => 'Invalid password']], 422);
+          $this->response(['status' => false, 'error' => ['password' => 'Invalid password']], 422);
         }
       } else {
         $this->response(['status' => false, 'error' => ['email' => 'Invalid email']], 422);
@@ -68,9 +78,9 @@ class Auth extends MX_Controller
     }
   }
 
+
   public function register_post()
   {
-    // TODO : ..
     $nama = $this->post('nama');
     $email = $this->post('email');
     $password = $this->post('password');
