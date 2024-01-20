@@ -33,8 +33,17 @@ class Merchant extends MX_Controller
   public function index_get()
   {
     $id = $this->get('id');
+    $page = $this->input->get('page') ? $this->input->get('page') : 1;
+    $limit = 20; // Jumlah data per halaman
+
+    $offset = ($page - 1) * $limit;
+
+    $package_merchant = "";
     if ($id === null) {
-      $merchant = $this->merchantModel->getDataMerchant()->result_array();
+      $merchant = $this->merchantModel->getDataMerchant($limit, $offset)->result_array();
+      $total_rows = count($merchant);
+
+      $total_pages = ceil($total_rows / $limit);
     } else {
       $merchant = $this->merchantModel->getDataMerchantById($id)->row_array();
       $package_merchant = $this->packageModel->getDataPackageMerchantById($id)->result_array();
@@ -67,7 +76,13 @@ class Merchant extends MX_Controller
       if ($merchant) {
         $this->response([
           'status' => true,
-          'data' => $data
+          'message' => 'Data merchant berhasil didapatkan!',
+          'data' => $data,
+          'pagination' => array(
+            'total_pages' => $total_pages,
+            'current_page' => $page,
+            'total_rows' => $total_rows
+          )
         ], 200);
       } else {
         $this->response([

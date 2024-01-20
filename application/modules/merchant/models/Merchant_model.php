@@ -2,8 +2,9 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 class Merchant_model extends CI_Model
 {
-  public function getDataMerchant()
+  public function getDataMerchant($limit, $offset)
   {
+    $this->db->limit($limit, $offset);
     $this->db->select('a.*');
     $this->db->where('delete_sts', 0);
     $this->db->from('merchant a');
@@ -70,5 +71,31 @@ class Merchant_model extends CI_Model
     } else {
       return FALSE;
     }
+  }
+
+  public function getDataRekomendasiMerchant($limit, $offset)
+  {
+    $this->db->limit($limit, $offset);
+    $this->db->select('a.*');
+    $this->db->where('delete_sts', 0);
+    $this->db->where('sts_rekomendasi', 1);
+    $this->db->from('merchant a');
+
+    $query = $this->db->get();
+    return $query;
+  }
+
+  public function getMerchants($limit, $offset)
+  {
+    // Query untuk mengambil data merchant sesuai halaman dan jumlah data per halaman
+    $this->db->limit($limit, $offset);
+    $query = $this->db->get('merchant'); // Gantilah 'merchants' dengan nama tabel yang sesuai
+    return $query->result();
+  }
+
+  public function countMerchants()
+  {
+    // Query untuk menghitung jumlah total data merchant
+    return $this->db->count_all('merchant'); // Gantilah 'merchants' dengan nama tabel yang sesuai
   }
 }
