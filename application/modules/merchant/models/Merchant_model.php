@@ -2,8 +2,9 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 class Merchant_model extends CI_Model
 {
-  public function getDataMerchant()
+  public function getDataMerchant($limit, $offset)
   {
+    $this->db->limit($limit, $offset);
     $this->db->select('a.*');
     $this->db->where('delete_sts', 0);
     $this->db->from('merchant a');
