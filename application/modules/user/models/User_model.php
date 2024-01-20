@@ -66,4 +66,27 @@ class User_model extends CI_Model
     $query = $this->db->get();
     return $query;
   }
+  public function insertDataRegister($data)
+  {
+      $this->db->insert('user', $data);
+  
+      $insert = $this->db->affected_rows();
+      
+      if ($insert == 1) {
+          $data = $this->getDataUserByEmail($data['email'])->row_array();
+          return $data;
+      } else {
+          return FALSE;
+      }
+  }
+
+  public function cekEmailAuth($email)
+  {
+    $this->db->select('a.*');
+    $this->db->from('user a');
+    $this->db->where('a.email', $email);
+
+    $result = $this->db->get();
+    return $result;
+  }
 }

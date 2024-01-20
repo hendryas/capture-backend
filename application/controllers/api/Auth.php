@@ -101,39 +101,21 @@ class Auth extends MX_Controller
 
     // Set validation rules
     $this->form_validation->set_data($data);
-    $this->form_validation->set_rules('nama', 'Nama', 'required|trim', [
-      'required' => 'Nama tidak boleh kosong.'
-    ]);
-
-    $this->form_validation->set_rules('email', 'Email', 'required|trim|is_unique[user.email]', [
-      'required' => 'Email tidak boleh kosong.',
-      'is_unique' => 'Email ini sudah terdaftar!'
-    ]);
-
-    $this->form_validation->set_rules('password', 'Password', 'required|trim|min_length[8]|matches[confirm_password]', [
-      'matches' => 'Password tidak sama!',
-      'min_length' => 'Password terlalu pendek!',
-      'required' => 'Password tidak boleh kosong.',
-    ]);
-
-    $this->form_validation->set_rules('confirm_password', 'Password', 'required|trim|matches[password]', [
-      'required' => 'Password tidak boleh kosong.',
-      'matches' => 'Password tidak sama!',
-    ]);
+    $this->form_validation->set_rules('nama', 'Nama', 'required|trim');
+    $this->form_validation->set_rules('email', 'Email', 'required|trim|is_unique[user.email]|valid_email');
+    $this->form_validation->set_rules('password', 'Password', 'required|trim|min_length[8]|matches[confirm_password]');
+    $this->form_validation->set_rules('confirm_password', 'Password', 'required|trim|matches[password]');
 
     if ($this->form_validation->run() == FALSE) {
       // Validation failed
       $this->response(['status' => false, 'error' => $this->form_validation->error_array()], 422);
     } else {
       // Validation passed, proceed with registration
-      $cekEmail = $this->registerModel->cekEmailAuth($data['email'])->result();
+      $cekEmail = $this->userModel->cekEmailAuth($data['email'])->result();
       $isEmail = count($cekEmail);
 
       if ($isEmail > 0) {
-        $this->response([
-          'status' => false,
-          'message' => 'Email sudah pernah dibuat!'
-        ], 409);
+        $this->response(['status' => false, 'error' => ['email' => 'Email sudah pernah dibuat!']], 422);
       } else {
         $password = password_hash($data['confirm_password'], PASSWORD_DEFAULT);
 
@@ -147,10 +129,18 @@ class Auth extends MX_Controller
           'created_at' => date('Y-m-d H:i:s')
         ];
 
-        $this->registerModel->insertDataRegister($insertData);
+        $user = $this->userModel->insertDataRegister($insertData);
+
+        $payload = [
+          'id_user' => $user['id_user'],
+          'email' => $user['email'],
+          'id_role' => $user['id_role'],
+          'nama' => $user['nama']
+        ];
+        $token = $this->authorization_token->generateToken($payload);
         $this->response([
           'status' => true,
-          'message' => 'Berhasil Registrasi Akun'
+          'message' => 'Berhasil Registrasi Akun', 'token' => $token,
         ], 200);
       }
     }
