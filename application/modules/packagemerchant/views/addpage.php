@@ -85,6 +85,11 @@
                         </div>
                       </div>
 
+                      <div class="row mt-3">
+                        <label for="harga_paket_service" class="form-label">Harga Paket Service</label>
+                        <input type="number" name="harga_paket_service" id="harga_paket_service" class="form-control" required>
+                      </div>
+
                     </div>
                     <div class="card-footer">
                       <a href="<?= base_url('packagemerchant') ?>" class="btn btn-secondary">Kembali</a>

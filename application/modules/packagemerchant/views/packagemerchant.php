@@ -67,7 +67,8 @@
                                 <td><?= $merchant['nama_merchant'] ?></td>
                                 <td class="text-center">
                                   <!-- <button type="button" class="btn btn-sm btn-info btn-burger" data-bs-toggle="modal" data-bs-target="#modalLihat</?php echo $merchant['id_merchant']; ?>"><i class="material-icons">visibility</i></button> -->
-                                  <button type="button" class="btn btn-sm btn-info btn-burger" data-bs-toggle="modal" data-bs-target="#modalEdit<?php echo $merchant['id_merchant']; ?>"><i class="material-icons">visibility</i></button>
+                                  <a href="<?= base_url('packagemerchant/detailPackageMerchant/') . $merchant['id_merchant'] ?>" class="btn btn-sm btn-info btn-burger"><i class="material-icons">visibility</i></a>
+                                  <!-- <button type="button" class="btn btn-sm btn-info btn-burger" data-bs-toggle="modal" data-bs-target="#modalEdit</?php echo $merchant['id_merchant']; ?>"><i class="material-icons">visibility</i></button> -->
                                   <button type="button" name="btnHapusData" class="btn btn-sm btn-danger btn-burger"><i class="material-icons">delete_outline</i></button>
                                 </td>
                               </tr>

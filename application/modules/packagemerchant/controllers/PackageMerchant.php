@@ -39,6 +39,7 @@ class PackageMerchant extends CI_Controller
   {
     $nama_merchant = htmlspecialchars($this->input->post('nama_merchant'));
     $nama_service = $this->input->post('nama_service');
+    $harga_paket_service = htmlspecialchars($this->input->post('harga_paket_service'));
 
     $hitung_jml_service = count($nama_service);
     for ($i = 0; $i < $hitung_jml_service; $i++) {
@@ -50,6 +51,12 @@ class PackageMerchant extends CI_Controller
       ];
       $insert = $this->packageModel->insertDataMerchant($data);
     }
+
+    $data_update = [
+      'total_harga_package_merchant' => (int)$harga_paket_service
+    ];
+
+    $this->merchantModel->updateDataMerchant($nama_merchant, $data_update);
 
     $this->session->set_flashdata('message', '<div class="alert alert-success text-center" role="alert">
     <strong>Data Berhasil di Tambah!</strong></div>');
@@ -77,5 +84,17 @@ class PackageMerchant extends CI_Controller
       "log" => $log
     );
     echo json_encode($response);
+  }
+
+  public function detailPackageMerchant($id_merchant)
+  {
+    $data['title'] = 'Detail Package Merchant';
+
+    $data['data_packagemerchant'] = $this->packageModel->getDataPackageMerchantById($id_merchant)->result_array();
+    $data['data_merchant'] = $this->merchantModel->getDataMerchantById($id_merchant)->row_array();
+
+    $this->load->view('templates/header/header', $data);
+    $this->load->view('packagemerchant/detailpackagemerchant', $data);
+    $this->load->view('templates/footer/footer', $data);
   }
 }
