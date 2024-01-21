@@ -18,7 +18,7 @@ class Merchant extends CI_Controller
     $data['title'] = 'Merchant';
 
     $data['data_categories'] = $this->categoryModel->getDataCategory()->result_array();
-    $data['data_merchant'] = $this->merchantModel->getDataMerchant()->result_array();
+    $data['data_merchant'] = $this->merchantModel->getDataMerchants()->result_array();
     $this->load->view('templates/header/header', $data);
     $this->load->view('merchant/merchant', $data);
     $this->load->view('templates/footer/footer', $data);
@@ -212,7 +212,7 @@ class Merchant extends CI_Controller
   {
     $data['title'] = 'Rekomendasi Merchant';
 
-    $data['data_merchant'] = $this->merchantModel->getDataMerchant()->result_array();
+    $data['data_merchant'] = $this->merchantModel->getDataMerchants()->result_array();
     $this->load->view('templates/header/header', $data);
     $this->load->view('merchant/rekomendasimerchant', $data);
     $this->load->view('templates/footer/footer', $data);

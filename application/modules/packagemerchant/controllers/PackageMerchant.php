@@ -18,7 +18,7 @@ class PackageMerchant extends CI_Controller
     $data['title'] = 'Package Merchant';
 
     $data['data_packagemerchant'] = $this->packageModel->getDataPackageMerchant()->result_array();
-    $data['data_merchant'] = $this->merchantModel->getDataMerchant()->result_array();
+    $data['data_merchant'] = $this->merchantModel->getDataMerchants()->result_array();
 
     $this->load->view('templates/header/header', $data);
     $this->load->view('packagemerchant/packagemerchant', $data);
@@ -29,7 +29,7 @@ class PackageMerchant extends CI_Controller
   {
     $data['title'] = 'Package Merchant';
 
-    $data['data_merchant'] = $this->merchantModel->getDataMerchant()->result_array();
+    $data['data_merchant'] = $this->merchantModel->getDataMerchants()->result_array();
     $this->load->view('templates/header/header', $data);
     $this->load->view('packagemerchant/addpage', $data);
     $this->load->view('templates/footer/footer', $data);
