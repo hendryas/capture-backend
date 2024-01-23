@@ -13,6 +13,8 @@ class Merchant extends MX_Controller
     REST_Controller::__construct as private __resTraitConstruct;
   }
 
+  private static $paginationLimit = 20;
+
   function __construct()
   {
     // Construct the parent class
@@ -42,30 +44,23 @@ class Merchant extends MX_Controller
         if ($id === null) {
           // Get All merchants
           $page = $this->input->get('page') ? $this->input->get('page') : 1;
-          $limit = 20; // Jumlah data per halaman
-          $offset = ($page - 1) * $limit;
+          $name = $this->input->get('name');
+          $offset = ($page - 1) * $this::$paginationLimit;
 
-          $merchant = $this->merchantModel->getDataMerchant($limit, $offset)->result_array();
+          $merchant = $this->merchantModel->getDataMerchant($this::$paginationLimit, $offset, $name)->result_array();
           $total_rows = count($merchant);
-          $total_pages = ceil($total_rows / $limit);
+          $total_pages = ceil($total_rows / $this::$paginationLimit);
 
-          if ($merchant) {
-            $this->response([
-              'status' => true,
-              'message' => 'Data merchant berhasil didapatkan!',
-              'data' => $merchant,
-              'pagination' => array(
-                'total_pages' => $total_pages,
-                'current_page' => $page,
-                'total_rows' => $total_rows
-              )
-            ], 200);
-          } else {
-            $this->response([
-              'status' => false,
-              'message' => 'id tidak ditemukan'
-            ], 404);
-          }
+          $this->response([
+            'status' => true,
+            'message' => 'Data merchant berhasil didapatkan!',
+            'data' => $merchant,
+            'pagination' => array(
+              'total_pages' => $total_pages,
+              'current_page' => $page,
+              'total_rows' => $total_rows
+            )
+          ], 200);
         } else {
           // Detail merchant
           $merchant = $this->merchantModel->getDataMerchantById($id)->row_array();
@@ -94,24 +89,6 @@ class Merchant extends MX_Controller
     }
   }
 
-  public function index_post()
-  {
-    $search_studio = $this->post('search_studio');
-    $qry_merchant = $this->merchantModel->searchDataMerchant($search_studio)->result_array();
-
-    if ($qry_merchant) {
-      $this->response([
-        'status' => true,
-        'data' => $qry_merchant
-      ], 200);
-    } else {
-      $this->response([
-        'status' => false,
-        'message' => 'data tidak ada!'
-      ], 404);
-    }
-  }
-
   public function recomendation_get()
   {
     $headers = $this->input->request_headers();
@@ -121,14 +98,12 @@ class Merchant extends MX_Controller
       if ($decodedToken['status']) {
 
         $page = $this->input->get('page') ? $this->input->get('page') : 1;
-        $limit = 20; // Jumlah data per halaman
+        $offset = ($page - 1) * $this::$paginationLimit;
 
-        $offset = ($page - 1) * $limit;
-
-        $merchants = $this->merchantModel->getDataRekomendasiMerchant($limit, $offset)->result_array();
+        $merchants = $this->merchantModel->getDataRekomendasiMerchant($this::$paginationLimit, $offset)->result_array();
         $total_rows = count($merchants);
 
-        $total_pages = ceil($total_rows / $limit);
+        $total_pages = ceil($total_rows / $this::$paginationLimit);
 
         $this->response([
           'status' => true,
