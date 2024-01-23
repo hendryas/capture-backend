@@ -35,8 +35,9 @@ class Categories extends MX_Controller
   public function index_get()
   {
     $headers = $this->input->request_headers(); 
-    if (isset($headers['Authorization'])) {
-      $decodedToken = $this->authorization_token->validateToken($headers['Authorization']);
+    
+    if (isset($headers['authorization'])) {
+      $decodedToken = $this->authorization_token->validateToken($headers['authorization']);
       if ($decodedToken['status']) {
         // Logic Start Here
         $id = $this->get('id');
@@ -60,10 +61,10 @@ class Categories extends MX_Controller
 
         // Logic End
       } else {
-          $this->response($decodedToken);
+          $this->response($decodedToken, 401);
       }
     } else {
-      $this->response(['status' => false, 'message' => 'Authentication failed'], 403);
+      $this->response(['status' => false, 'message' => 'Authentication failed'], 401);
     }   
   }
 }
