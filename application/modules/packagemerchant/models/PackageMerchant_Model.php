@@ -41,7 +41,7 @@ class PackageMerchant_model extends CI_Model
 
   public function getDataPackageMerchantById($id)
   {
-    $this->db->select('a.nama_service');
+    $this->db->select('a.id_packagemerchant as id, a.nama_service as name');
     $this->db->where('delete_sts', 0);
     $this->db->where('id_merchant', $id);
     $this->db->from('packagemerchant a');

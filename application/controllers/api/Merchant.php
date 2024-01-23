@@ -20,7 +20,7 @@ class Merchant extends MX_Controller
     $this->__resTraitConstruct();
 
     date_default_timezone_set('Asia/Jakarta');
-    $this->load->library('Authorization_Token');	
+    $this->load->library('Authorization_Token');
     $this->load->model('merchant/Merchant_model', 'merchantModel');
     $this->load->model('packagemerchant/PackageMerchant_model', 'packageModel');
 
@@ -33,64 +33,64 @@ class Merchant extends MX_Controller
 
   public function index_get()
   {
-    $id = $this->get('id');
-    $page = $this->input->get('page') ? $this->input->get('page') : 1;
-    $limit = 20; // Jumlah data per halaman
+    $headers = $this->input->request_headers();
+    if (isset($headers['authorization'])) {
+      $decodedToken = $this->authorization_token->validateToken($headers['authorization']);
+      if ($decodedToken['status']) {
+        //
+        $id = $this->get('id');
+        if ($id === null) {
+          // Get All merchants
+          $page = $this->input->get('page') ? $this->input->get('page') : 1;
+          $limit = 20; // Jumlah data per halaman
+          $offset = ($page - 1) * $limit;
 
-    $offset = ($page - 1) * $limit;
+          $merchant = $this->merchantModel->getDataMerchant($limit, $offset)->result_array();
+          $total_rows = count($merchant);
+          $total_pages = ceil($total_rows / $limit);
 
-    $package_merchant = "";
-    if ($id === null) {
-      $merchant = $this->merchantModel->getDataMerchant($limit, $offset)->result_array();
-      $total_rows = count($merchant);
-
-      $total_pages = ceil($total_rows / $limit);
-    } else {
-      $merchant = $this->merchantModel->getDataMerchantById($id)->row_array();
-      $package_merchant = $this->packageModel->getDataPackageMerchantById($id)->result_array();
-    }
-
-    if ($package_merchant) {
-      $data = [
-        'data_merchant' => $merchant,
-        'data_packagemerchant' => $package_merchant,
-      ];
-    } else {
-      $data = [
-        'data_merchant' => $merchant
-      ];
-    }
-
-    if ($package_merchant) {
-      if ($merchant) {
-        $this->response([
-          'status' => true,
-          'data' => $data
-        ], 200);
+          if ($merchant) {
+            $this->response([
+              'status' => true,
+              'message' => 'Data merchant berhasil didapatkan!',
+              'data' => $merchant,
+              'pagination' => array(
+                'total_pages' => $total_pages,
+                'current_page' => $page,
+                'total_rows' => $total_rows
+              )
+            ], 200);
+          } else {
+            $this->response([
+              'status' => false,
+              'message' => 'id tidak ditemukan'
+            ], 404);
+          }
+        } else {
+          // Detail merchant
+          $merchant = $this->merchantModel->getDataMerchantById($id)->row_array();
+          $package_merchant = $this->packageModel->getDataPackageMerchantById($id)->result_array();
+          if ($merchant) {
+            $data = [
+              'packagemerchant' => $package_merchant,
+            ];
+            $data = array_merge($merchant, $data);
+            $this->response([
+              'status' => true,
+              'data' => $data
+            ], 200);
+          } else {
+            $this->response([
+              'status' => false,
+              'message' => 'Data tidak ditemukan'
+            ], 404);
+          }
+        }
       } else {
-        $this->response([
-          'status' => false,
-          'message' => 'id tidak ditemukan'
-        ], 404);
+        $this->response($decodedToken, 401);
       }
     } else {
-      if ($merchant) {
-        $this->response([
-          'status' => true,
-          'message' => 'Data merchant berhasil didapatkan!',
-          'data' => $data,
-          'pagination' => array(
-            'total_pages' => $total_pages,
-            'current_page' => $page,
-            'total_rows' => $total_rows
-          )
-        ], 200);
-      } else {
-        $this->response([
-          'status' => false,
-          'message' => 'id tidak ditemukan'
-        ], 404);
-      }
+      $this->response(['status' => false, 'message' => 'Authentication failed'], 401);
     }
   }
 
