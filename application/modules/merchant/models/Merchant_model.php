@@ -12,16 +12,18 @@ class Merchant_model extends CI_Model
     return $query;
   }
 
-  public function getDataMerchant($limit, $offset, $name)
+  public function getDataMerchant($limit, $offset, $name, $categoryId)
 {
     $this->db->limit($limit, $offset);
     $this->db->select('a.*');
     $this->db->where('delete_sts', 0);
     $this->db->from('merchant a');
 
-    // Check if $name is not null or empty before adding the LIKE clause
     if (!empty($name)) {
         $this->db->like('nama_merchant', $name);
+    }
+    if (!empty($categoryId)) {
+      $this->db->where('id_kategori', $categoryId);
     }
 
     $query = $this->db->get();

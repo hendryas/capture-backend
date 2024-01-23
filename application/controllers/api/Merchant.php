@@ -45,9 +45,10 @@ class Merchant extends MX_Controller
           // Get All merchants
           $page = $this->input->get('page') ? $this->input->get('page') : 1;
           $name = $this->input->get('name');
+          $categoryId = $this->input->get('category_id');
           $offset = ($page - 1) * $this::$paginationLimit;
 
-          $merchant = $this->merchantModel->getDataMerchant($this::$paginationLimit, $offset, $name)->result_array();
+          $merchant = $this->merchantModel->getDataMerchant($this::$paginationLimit, $offset, $name, $categoryId)->result_array();
           $total_rows = count($merchant);
           $total_pages = ceil($total_rows / $this::$paginationLimit);
 
