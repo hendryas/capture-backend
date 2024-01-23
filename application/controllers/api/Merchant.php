@@ -20,6 +20,7 @@ class Merchant extends MX_Controller
     $this->__resTraitConstruct();
 
     date_default_timezone_set('Asia/Jakarta');
+    $this->load->library('Authorization_Token');	
     $this->load->model('merchant/Merchant_model', 'merchantModel');
     $this->load->model('packagemerchant/PackageMerchant_model', 'packageModel');
 
@@ -108,6 +109,42 @@ class Merchant extends MX_Controller
         'status' => false,
         'message' => 'data tidak ada!'
       ], 404);
+    }
+  }
+
+  public function recomendation_get()
+  {
+    $headers = $this->input->request_headers();
+
+    if (isset($headers['authorization'])) {
+      $decodedToken = $this->authorization_token->validateToken($headers['authorization']);
+      if ($decodedToken['status']) {
+
+        $page = $this->input->get('page') ? $this->input->get('page') : 1;
+        $limit = 20; // Jumlah data per halaman
+
+        $offset = ($page - 1) * $limit;
+
+        $merchants = $this->merchantModel->getDataRekomendasiMerchant($limit, $offset)->result_array();
+        $total_rows = count($merchants);
+
+        $total_pages = ceil($total_rows / $limit);
+
+        $this->response([
+          'status' => true,
+          'message' => 'Data rekomendasi merchant berhasil!',
+          'data' => $merchants,
+          'pagination' => array(
+            'total_pages' => $total_pages,
+            'current_page' => $page,
+            'total_rows' => $total_rows
+          )
+        ], 200);
+      } else {
+        $this->response($decodedToken, 401);
+      }
+    } else {
+      $this->response(['status' => false, 'message' => 'Authentication failed'], 401);
     }
   }
 }
