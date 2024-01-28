@@ -15,14 +15,13 @@
             <a class="nav-link toggle-search" href="#"><i class="material-icons">search</i></a>
           </li>
           <li class="nav-item hidden-on-mobile">
-            <a class="nav-link language-dropdown-toggle" href="#" id="languageDropDown" data-bs-toggle="dropdown"><img src="../../assets/images/flags/us.png" alt=""></a>
+            <a class="nav-link language-dropdown-toggle" href="#" id="languageDropDown" data-bs-toggle="dropdown"><img src="<?= base_url('assets/images/avatars/profile_1.png'); ?>" alt=""></a>
             <ul class="dropdown-menu dropdown-menu-end language-dropdown" aria-labelledby="languageDropDown">
-              <li><a class="dropdown-item" href="#"><img src="<?= base_url('assets/images/flags/germany.png') ?>" alt="">German</a></li>
-              <li><a class="dropdown-item" href="#"><img src="../../assets/images/flags/italy.png" alt="">Italian</a></li>
-              <li><a class="dropdown-item" href="#"><img src="../../assets/images/flags/china.png" alt="">Chinese</a></li>
+              <li><a class="dropdown-item" href="<?= base_url('ProfileAdmin') ?>"><img src="<?= base_url('assets/images/avatars/profile_1.png'); ?>" alt="">Profile</a></li>
+              <li><a class="dropdown-item logout" href="#"><img src="<?= base_url('assets/images/avatars/logout.jpg'); ?>" alt="">Logout</a></li>
             </ul>
           </li>
-          <li class="nav-item hidden-on-mobile">
+          <!-- <li class="nav-item hidden-on-mobile">
             <a class="nav-link nav-notifications-toggle" id="notificationsDropDown" href="#" data-bs-toggle="dropdown">4</a>
             <div class="dropdown-menu dropdown-menu-end notifications-dropdown" aria-labelledby="notificationsDropDown">
               <h6 class="dropdown-header">Notifications</h6>
@@ -94,7 +93,7 @@
                 </a>
               </div>
             </div>
-          </li>
+          </li> -->
         </ul>
       </div>
     </div>

@@ -2,6 +2,16 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 class Category_model extends CI_Model
 {
+  public function getDataCategories()
+  {
+    $this->db->select('a.*');
+    $this->db->where('delete_sts', 0);
+    $this->db->from('kategori a');
+
+    $query = $this->db->get();
+    return $query;
+  }
+
   public function getDataCategory()
   {
     $this->db->select('a.*');

@@ -1,11 +1,11 @@
 <div class="app-sidebar">
   <div class="logo">
-    <a href="index.html" class="logo-icon"><span class="logo-text">CAPTURE</span></a>
+    <a href="<?= base_url('dashboard'); ?>" class="logo-icon"><span class="logo-text">CAPTURE</span></a>
     <div class="sidebar-user-switcher user-activity-online">
       <a href="#">
-        <img src="<?= base_url('assets/images/avatars/avatar.png') ?>">
+        <!-- <img src="<?= base_url('assets/images/avatars/avatar.png') ?>"> -->
         <span class="activity-indicator"></span>
-        <span class="user-info-text">Chloe<br><span class="user-state-info">On a call</span></span>
+        <span class="user-info-text"><?php echo $this->session->userdata('nama')  ?><br><span class="user-state-info"></span></span>
       </a>
     </div>
   </div>
@@ -38,23 +38,6 @@
           </li>
           <li>
             <a href="#">History Pembayaran Customer</a>
-          </li>
-          <li>
-            <a href="#">Authentication<i class="material-icons has-sub-menu">keyboard_arrow_right</i></a>
-            <ul class="sub-menu">
-              <li>
-                <a href="sign-in.html">Sign In</a>
-              </li>
-              <li>
-                <a href="sign-up.html">Sign Up</a>
-              </li>
-              <li>
-                <a href="lock-screen.html">Lock Screen</a>
-              </li>
-            </ul>
-          </li>
-          <li>
-            <a href="error.html">Error</a>
           </li>
         </ul>
       </li>

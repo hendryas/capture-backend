@@ -29,15 +29,12 @@
                   <div class="card-body">
                     <div class="widget-stats-container d-flex">
                       <div class="widget-stats-icon widget-stats-icon-warning">
-                        <i class="material-icons-outlined">person</i>
+                        <i class="material-icons-outlined">people</i>
                       </div>
                       <div class="widget-stats-content flex-fill">
-                        <span class="widget-stats-title">Active Users</span>
-                        <span class="widget-stats-amount">23,491</span>
-                        <span class="widget-stats-info">790 unique this month</span>
-                      </div>
-                      <div class="widget-stats-indicator widget-stats-indicator-positive align-self-start">
-                        <i class="material-icons">keyboard_arrow_up</i> 12%
+                        <span class="widget-stats-title">All Users</span>
+                        <span class="widget-stats-amount"><?= count($data_all_users) ?></span>
+                        <span class="widget-stats-info"></span>
                       </div>
                     </div>
                   </div>
@@ -48,15 +45,44 @@
                   <div class="card-body">
                     <div class="widget-stats-container d-flex">
                       <div class="widget-stats-icon widget-stats-icon-warning">
-                        <i class="material-icons-outlined">photo_camera</i>
+                        <i class="material-icons-outlined">storefront</i>
+                      </div>
+                      <div class="widget-stats-content flex-fill">
+                        <span class="widget-stats-title">All Merchants</span>
+                        <span class="widget-stats-amount"><?= count($data_merchant) ?></span>
+                        <span class="widget-stats-info"></span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-xl-4">
+                <div class="card widget widget-stats">
+                  <div class="card-body">
+                    <div class="widget-stats-container d-flex">
+                      <div class="widget-stats-icon widget-stats-icon-warning">
+                        <i class="material-icons-outlined">design_services</i>
                       </div>
                       <div class="widget-stats-content flex-fill">
                         <span class="widget-stats-title">All Service</span>
-                        <span class="widget-stats-amount">23,491</span>
-                        <span class="widget-stats-info">790 unique this month</span>
+                        <span class="widget-stats-amount"><?= count($data_package_merchants)  ?></span>
+                        <span class="widget-stats-info"></span>
                       </div>
-                      <div class="widget-stats-indicator widget-stats-indicator-positive align-self-start">
-                        <i class="material-icons">keyboard_arrow_up</i> 12%
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-xl-4">
+                <div class="card widget widget-stats">
+                  <div class="card-body">
+                    <div class="widget-stats-container d-flex">
+                      <div class="widget-stats-icon widget-stats-icon-warning">
+                        <i class="material-icons-outlined">category</i>
+                      </div>
+                      <div class="widget-stats-content flex-fill">
+                        <span class="widget-stats-title">All Categories</span>
+                        <span class="widget-stats-amount"><?= count($data_categories) ?></span>
+                        <span class="widget-stats-info"></span>
                       </div>
                     </div>
                   </div>
@@ -67,70 +93,137 @@
               <div class="col-xl-4">
                 <div class="card widget widget-list">
                   <div class="card-header">
-                    <h5 class="card-title">All Users<span class="badge badge-success badge-style-light">14 completed</span></h5>
+                    <h5 class="card-title">All Users Active<span class="badge badge-success badge-style-light"><?= count($data_users_active); ?> completed</span></h5>
                   </div>
                   <div class="card-body">
-                    <span class="text-muted m-b-xs d-block">showing 5 out of 23 active tasks.</span>
+                    <span class="text-muted m-b-xs d-block"> Showing <?= count($data_users_active); ?> active users from total <?= count($data_all_users); ?> users data.</span>
                     <ul class="widget-list-content list-unstyled">
-                      <li class="widget-list-item widget-list-item-green">
-                        <span class="widget-list-item-icon"><i class="material-icons-outlined">article</i></span>
-                        <span class="widget-list-item-description">
-                          <a href="#" class="widget-list-item-description-title">
-                            Dashboard UI optimisations
-                          </a>
-                          <span class="widget-list-item-description-subtitle">
-                            Oskar Hudson
+                      <?php foreach ($data_users_active as $user) : ?>
+                        <li class="widget-list-item widget-list-item-green">
+                          <span class="widget-list-item-icon">
+                            <img src="<?= base_url('assets/images/avatars/profile_1.png') ?>" alt="" width="30" class="pt-2">
                           </span>
-                        </span>
-                      </li>
-                      <li class="widget-list-item widget-list-item-blue">
-                        <span class="widget-list-item-icon"><i class="material-icons-outlined">verified_user</i></span>
-                        <span class="widget-list-item-description">
-                          <a href="#" class="widget-list-item-description-title">
-                            Mailbox cleanup
-                          </a>
-                          <span class="widget-list-item-description-subtitle">
-                            Woodrow Hawkins
+                          <span class="widget-list-item-description">
+                            <a href="#" class="widget-list-item-description-title">
+                              <?= $user['nama'] ?>
+                            </a>
+                            <span class="widget-list-item-description-subtitle">
+                              <?php if ($user['id_role'] == 1) : ?>
+                                Admin
+                              <?php elseif ($user['id_role'] == 2) : ?>
+                                Merchant
+                              <?php elseif ($user['id_role'] == 3) : ?>
+                                Customer
+                              <?php endif; ?>
+                            </span>
                           </span>
-                        </span>
-                      </li>
-                      <li class="widget-list-item widget-list-item-purple">
-                        <span class="widget-list-item-icon"><i class="material-icons-outlined">watch_later</i></span>
-                        <span class="widget-list-item-description">
-                          <a href="#" class="widget-list-item-description-title">
-                            Header scroll bugfix
-                          </a>
-                          <span class="widget-list-item-description-subtitle">
-                            Sky Meyers
-                          </span>
-                        </span>
-                      </li>
-                      <li class="widget-list-item widget-list-item-yellow">
-                        <span class="widget-list-item-icon"><i class="material-icons-outlined">extension</i></span>
-                        <span class="widget-list-item-description">
-                          <a href="#" class="widget-list-item-description-title">
-                            Localization for file manager
-                          </a>
-                          <span class="widget-list-item-description-subtitle">
-                            Oskar Hudson
-                          </span>
-                        </span>
-                      </li>
-                      <li class="widget-list-item widget-list-item-red">
-                        <span class="widget-list-item-icon"><i class="material-icons-outlined">invert_colors</i></span>
-                        <span class="widget-list-item-description">
-                          <a href="#" class="widget-list-item-description-title">
-                            New E-commerce UX/UI design
-                          </a>
-                          <span class="widget-list-item-description-subtitle">
-                            Oskar Hudson
-                          </span>
-                        </span>
-                      </li>
+                        </li>
+                      <?php endforeach; ?>
                     </ul>
                   </div>
                 </div>
               </div>
+              <div class="col-xl-4">
+                <div class="card widget widget-list">
+                  <div class="card-header">
+                    <h5 class="card-title">All Users Not Active<span class="badge badge-success badge-style-light"><?= count($data_users_not_active); ?> completed</span></h5>
+                  </div>
+                  <div class="card-body">
+                    <span class="text-muted m-b-xs d-block"> Showing <?= count($data_users_not_active); ?> not active users from total <?= count($data_all_users); ?> users data.</span>
+                    <ul class="widget-list-content list-unstyled">
+                      <?php foreach ($data_users_not_active as $user) : ?>
+                        <li class="widget-list-item widget-list-item-green">
+                          <span class="widget-list-item-icon">
+                            <img src="<?= base_url('assets/images/avatars/profile_1.png') ?>" alt="" width="30" class="pt-2">
+                          </span>
+                          <span class="widget-list-item-description">
+                            <a href="#" class="widget-list-item-description-title">
+                              <?= $user['nama'] ?>
+                            </a>
+                            <span class="widget-list-item-description-subtitle">
+                              <?php if ($user['id_role'] == 1) : ?>
+                                Admin
+                              <?php elseif ($user['id_role'] == 2) : ?>
+                                Merchant
+                              <?php elseif ($user['id_role'] == 3) : ?>
+                                Customer
+                              <?php endif; ?>
+                            </span>
+                          </span>
+                        </li>
+                      <?php endforeach; ?>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <!-- <div class="col-xl-4">
+                <div class="card widget widget-list">
+                  <div class="card-header">
+                    <h5 class="card-title">All Package Merchants<span class="badge badge-success badge-style-light"><?= count($data_package_merchants); ?> completed</span></h5>
+                  </div>
+                  <div class="card-body">
+                    <span class="text-muted m-b-xs d-block"> Showing all service from merchants</span>
+                    <ul class="widget-list-content list-unstyled">
+                      <?php
+                      $temp_nama_merchant = '';
+                      $nomor = 1;
+                      ?>
+                      <?php foreach ($data_package_merchants as $service_merchant) : ?>
+                        <?php if ($nomor == 1) : ?>
+                          <li class="widget-list-item widget-list-item-green">
+                            <span class="widget-list-item-icon">
+                              <img src="<?= base_url('assets/images/logo/') . $service_merchant['logo'] ?>" alt="" width="30" class="pt-2">
+                            </span>
+                            <span class="widget-list-item-description">
+                              <a href="#" class="widget-list-item-description-title">
+                                <?= $service_merchant['nama_merchant'] ?>
+                              </a>
+                              <span class="widget-list-item-description-subtitle">
+                                service 1 <br>
+                                service 2
+                              </span>
+                            </span>
+                          </li>
+                        <?php else : ?>
+                          <?php if ($temp_nama_merchant == $service_merchant['nama_merchant']) : ?>
+                            <li class="widget-list-item widget-list-item-green">
+                              <span class="widget-list-item-icon">
+
+                              </span>
+                              <span class="widget-list-item-description">
+                                <a href="#" class="widget-list-item-description-title">
+                                  Nama Merchant
+                                </a>
+                                <span class="widget-list-item-description-subtitle">
+                                  service 1 <br>
+                                  service 2
+                                </span>
+                              </span>
+                            </li>
+                          <?php else : ?>
+                            <li class="widget-list-item widget-list-item-green">
+                              <span class="widget-list-item-icon">
+                                <img src="<?= base_url('assets/images/logo/') . $service_merchant['logo'] ?>" alt="" width="30" class="pt-2">
+                              </span>
+                              <span class="widget-list-item-description">
+                                <a href="#" class="widget-list-item-description-title">
+                                  Nama Merchant
+                                </a>
+                                <span class="widget-list-item-description-subtitle">
+                                  service 1 <br>
+                                  service 2
+                                </span>
+                              </span>
+                            </li>
+                          <?php endif; ?>
+                        <?php endif; ?>
+                        <?php $temp_nama_merchant = $service_merchant['nama_merchant'];  ?>
+                        <?php $nomor++; ?>
+                      <?php endforeach; ?>
+                    </ul>
+                  </div>
+                </div>
+              </div> -->
             </div>
           </div>
         </div>

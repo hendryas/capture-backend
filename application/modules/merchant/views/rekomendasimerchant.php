@@ -41,7 +41,6 @@
 
                   <div class="card-body">
                     <p class="card-description"></p>
-                    <button type="button" class="btn btn-primary mb-4" data-bs-toggle="modal" data-bs-target="#exampleModal">Tambah</button>
                     <div class="example-container">
                       <div class="example-content">
                         <table class="table">

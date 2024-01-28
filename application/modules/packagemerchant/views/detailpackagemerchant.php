@@ -56,7 +56,7 @@
                           <ul class="list-group">
                             <li class="list-group-item active" aria-current="true">List Services</li>
                             <?php foreach ($data_packagemerchant as $service) : ?>
-                              <li class="list-group-item"><?php echo $service['nama_service'] ?></li>
+                              <li class="list-group-item"><?php echo $service['name'] ?></li>
                             <?php endforeach; ?>
                           </ul>
                         </div>

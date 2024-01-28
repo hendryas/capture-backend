@@ -121,4 +121,32 @@ class User extends CI_Controller
     <strong>Berhasil Edit Data!</strong></div>');
     redirect('user');
   }
+
+  public function delete_data()
+  {
+    $id_user = htmlspecialchars($this->input->post('id_user'));
+
+    $data = [
+      'delete_sts' => 1,
+    ];
+
+    $qryUpdate = $this->userModel->updateDataUserById($id_user, $data);
+
+    if ($qryUpdate == 1) {
+      $status = "OK";
+      $message = "Berhasil Menghapus Data!";
+      $log = "";
+    } else {
+      $status = "ERROR";
+      $message = "Query Menghapus Data Gagal!";
+      $log = "";
+    }
+
+    $response = array(
+      "status" => $status,
+      "message" => $message,
+      "log" => $log
+    );
+    echo json_encode($response);
+  }
 }

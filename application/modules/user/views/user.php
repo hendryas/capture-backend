@@ -64,7 +64,10 @@
                             <?php foreach ($data_user as $user) : ?>
                               <tr>
                                 <th scope="row"><?= $no; ?>.</th>
-                                <td><?= $user['nama'] ?></td>
+                                <td>
+                                  <input type="hidden" id="id_user" name="id_user" value="<?= $user['id_user']; ?>">
+                                  <?= $user['nama'] ?>
+                                </td>
                                 <td><?= tgl_indo($user['tgl_lahir'])  ?></td>
                                 <td><?= $user['username'] ?></td>
                                 <td><?= $user['email'] ?></td>
@@ -85,7 +88,7 @@
                                 </td>
                                 <td class="text-center">
                                   <button type="button" class="btn btn-sm btn-success btn-burger" data-bs-toggle="modal" data-bs-target="#modalEdit<?php echo $user['id_user']; ?>"><i class="material-icons">edit</i></button>
-                                  <button type="button" class="btn btn-sm btn-danger btn-burger"><i class="material-icons">delete_outline</i></button>
+                                  <button type="button" name="btnHapusData" class="btn btn-sm btn-danger btn-burger"><i class="material-icons">delete_outline</i></button>
                                 </td>
                               </tr>
                               <?php $no++; ?>
@@ -408,5 +411,52 @@
         }
       });
 
+    });
+  </script>
+
+  <script>
+    $("button[name='btnHapusData']").click(function(e) {
+      e.preventDefault();
+      let id_user = $(this).closest("tr").find("#id_user").val();
+
+      let formData = new FormData();
+      formData.append("id_user", id_user);
+
+      Swal.fire({
+        title: "Apakah Anda Yakin?",
+        text: "Ingin Menghapus Data Ini!",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonColor: "#19A87E",
+        cancelButtonColor: "#ff3d60",
+        confirmButtonText: "Ya, Lanjutkan!",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          $.ajax({
+            url: "user/delete_data/user.php",
+            method: "POST",
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false,
+            beforeSend: () => {
+              $.LoadingOverlay("show");
+            },
+            complete: () => {
+              $.LoadingOverlay("hide");
+            },
+            success: (response) => {
+              let obj = JSON.parse(response);
+              if (obj.status == "OK") {
+                Swal.fire("Sukses!", obj.message, "success").then(() => {
+                  window.location.reload();
+                });
+              } else {
+                Swal.fire("Oops!", obj.message, "error");
+              }
+            },
+          });
+        }
+      });
     });
   </script>

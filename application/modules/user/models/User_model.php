@@ -2,6 +2,24 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 class User_model extends CI_Model
 {
+  public function getAllDataUsers()
+  {
+    $this->db->select('a.*');
+    $this->db->from('user a');
+
+    $query = $this->db->get();
+    return $query;
+  }
+  public function getDataUsers()
+  {
+    $this->db->select('a.*');
+    $this->db->where('delete_sts', 0);
+    $this->db->from('user a');
+
+    $query = $this->db->get();
+    return $query;
+  }
+
   public function getDataUser()
   {
     $this->db->select('a.*');
@@ -68,16 +86,16 @@ class User_model extends CI_Model
   }
   public function insertDataRegister($data)
   {
-      $this->db->insert('user', $data);
-  
-      $insert = $this->db->affected_rows();
-      
-      if ($insert == 1) {
-          $data = $this->getDataUserByEmail($data['email'])->row_array();
-          return $data;
-      } else {
-          return FALSE;
-      }
+    $this->db->insert('user', $data);
+
+    $insert = $this->db->affected_rows();
+
+    if ($insert == 1) {
+      $data = $this->getDataUserByEmail($data['email'])->row_array();
+      return $data;
+    } else {
+      return FALSE;
+    }
   }
 
   public function cekEmailAuth($email)
@@ -88,5 +106,25 @@ class User_model extends CI_Model
 
     $result = $this->db->get();
     return $result;
+  }
+
+  public function getDataUsersActive()
+  {
+    $this->db->select('a.*');
+    $this->db->where('is_active', 1);
+    $this->db->from('user a');
+
+    $query = $this->db->get();
+    return $query;
+  }
+
+  public function getDataUsersNotActive()
+  {
+    $this->db->select('a.*');
+    $this->db->where('is_active', 2);
+    $this->db->from('user a');
+
+    $query = $this->db->get();
+    return $query;
   }
 }

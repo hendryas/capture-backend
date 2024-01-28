@@ -49,4 +49,15 @@ class PackageMerchant_model extends CI_Model
     $query = $this->db->get();
     return $query;
   }
+
+  public function getDataPackageMerchants()
+  {
+    $this->db->select('a.id_packagemerchant as id, a.nama_service as name,b.nama_merchant,b.logo');
+    $this->db->where('a.delete_sts', 0);
+    $this->db->from('packagemerchant a');
+    $this->db->join('merchant b', 'a.id_merchant=b.id_merchant', 'left');
+
+    $query = $this->db->get();
+    return $query;
+  }
 }
