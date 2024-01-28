@@ -64,6 +64,7 @@ class User_model extends CI_Model
   {
     $this->db->where('id_user', $id);
     $this->db->update('user', $data);
+    
 
     $update = $this->db->affected_rows();
 
@@ -84,6 +85,7 @@ class User_model extends CI_Model
     $query = $this->db->get();
     return $query;
   }
+
   public function insertDataRegister($data)
   {
     $this->db->insert('user', $data);
