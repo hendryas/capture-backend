@@ -13,7 +13,7 @@
 	"require": {
 		"php": ">=5.3.7",
 		"phpoffice/phpspreadsheet": "*",
-		"midtrans/midtrans-php": "^2.5"
+		"midtrans/midtrans-php": "*"
 	},
 	"suggest": {
 		"paragonie/random_compat": "Provides better randomness in PHP 5.x"

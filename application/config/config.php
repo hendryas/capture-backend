@@ -1,10 +1,6 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-// API Key Midtrans
-// $config['MIDTRANS_CLIENTKEY'] = 'YOUR_MIDTRANS_API_KEY';
-// $config['MIDTRANS_SERVERKEY'] =
-
 /*
 |--------------------------------------------------------------------------
 | Base Site URL
