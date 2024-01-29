@@ -102,6 +102,7 @@ class Merchant extends MX_Controller
         $offset = ($page - 1) * $this::$paginationLimit;
 
         $merchants = $this->merchantModel->getDataRekomendasiMerchant($this::$paginationLimit, $offset)->result_array();
+        
         $total_rows = count($merchants);
 
         $total_pages = ceil($total_rows / $this::$paginationLimit);
