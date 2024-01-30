@@ -84,7 +84,6 @@ class Midtrans extends MX_Controller
             $token = $this->midtrans->createTransaction($payload);
 
             if ($token) {
-                // TODO : Create Transaction - Save Database
                 $data = null;
                 $dataTransaction = [
                     'id_merchant' => $merchant['id_merchant'],
@@ -92,7 +91,7 @@ class Midtrans extends MX_Controller
                     'no_order' => $no_order,
                     'tgl_order' => date('Y-m-d H:i:s'),
                     'total_bayar' => $merchant['total_harga_package_merchant'],
-                    'status_pembayaran' => 1,
+                    'status_pembayaran' => 'waiting',
                     'token' => $token,
                     'delete_sts' => 0,
                     'created_at' => date('Y-m-d H:i:s'),
