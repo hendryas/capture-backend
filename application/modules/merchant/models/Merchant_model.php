@@ -69,7 +69,7 @@ class Merchant_model extends CI_Model
 
   public function getDataMerchantById($id)
   {
-    $this->db->select('a.nama_merchant,a.logo,a.deskripsi,a.link_youtube,a.total_harga_package_merchant');
+    $this->db->select('a.id_merchant, a.nama_merchant, a.logo,a.deskripsi, a.link_youtube, a.total_harga_package_merchant');
     $this->db->where('a.delete_sts', 0);
     $this->db->where('a.id_merchant', $id);
     $this->db->from('merchant a');

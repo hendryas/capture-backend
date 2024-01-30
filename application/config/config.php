@@ -1,14 +1,6 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-// API Key Midtrans
-// $config['MIDTRANS_CLIENTKEY'] = 'YOUR_MIDTRANS_API_KEY';
-// $config['MIDTRANS_SERVERKEY'] =
-$config['server_key'] = 'SB-Mid-server-vtJp3UyAq6WJfx11Dxf3qzDS';
-$config['client_key'] = 'SB-Mid-client-L3ljVfxkcs6IbRDr';
-$config['is_production'] = false; // Set it to true when you're ready to go live
-
-
 /*
 |--------------------------------------------------------------------------
 | Base Site URL

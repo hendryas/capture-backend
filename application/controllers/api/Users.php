@@ -55,7 +55,6 @@ class Users extends MX_Controller
   public function index_post()
   {
     $id = $this->post('id');
-
     $nama = $this->post('nama');
     $username = $this->post('username');
     $email = $this->post('email');
