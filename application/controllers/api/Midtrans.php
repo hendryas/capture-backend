@@ -24,6 +24,7 @@ class Midtrans extends MX_Controller
         date_default_timezone_set('Asia/Jakarta');
         $this->load->model('user/User_model', 'userModel');
         $this->load->model('merchant/Merchant_model', 'merchantModel');
+        $this->load->model('payment/Payment_model', 'paymentModel');
         $this->authentication = new AuthenticationJWT($this);
         $this->midtrans = new MyMidtrans();
     }
@@ -81,6 +82,18 @@ class Midtrans extends MX_Controller
             if ($token) {
                 // TODO : Create Transaction - Save Database
                 $data = null;
+                $dataTransaction = [
+                    'id_merchant' => $merchant['id_merchant'],
+                    'id_user' => $this->userData['id_user'],
+                    'no_order' => $no_order,
+                    'tgl_order' => date('Y-m-d H:i:s'),
+                    'total_bayar' => $merchant['total_harga_package_merchant'],
+                    'status_pembayaran' => 1,
+                    'token' => $token,
+                    'delete_sts' => 0,
+                    'created_at' => date('Y-m-d H:i:s'),
+                ];
+                $insertTransaction = $this->paymentModel->insertDataPayment($dataTransaction);
                 // $data = $this->transactionModel
 
                 $data['token'] = $token;
@@ -88,7 +101,8 @@ class Midtrans extends MX_Controller
                 $this->response([
                     'message' => 'Berhasil membuat transaction',
                     'status' => true,
-                    'data' => $data
+                    'data' => $data,
+                    'data_transaction' => $dataTransaction
                 ], 200);
             } else {
                 $this->response([
