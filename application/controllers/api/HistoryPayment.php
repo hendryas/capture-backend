@@ -18,6 +18,7 @@ class HistoryPayment extends MX_Controller
     REST_Controller::__construct as private __resTraitConstruct;
   }
 
+  private static $paginationLimit = 2;
   private $authentication;
 
   public function __construct()
@@ -34,20 +35,24 @@ class HistoryPayment extends MX_Controller
 
   public function index_get()
   {
-    $id = $this->userData['id_user'];
-    $list_history_payment = $this->paymentModel->getDatahistoryPaymentByIdUser($id)->result_array();
+    $page = $this->input->get('page') ? $this->input->get('page') : 1;
+    $offset = ($page - 1) * $this::$paginationLimit;
 
-    if ($list_history_payment) {
-      $this->response([
-        'message' => 'Data Berhasil Diambil!',
-        'status' => true,
-        'data' => $list_history_payment
-      ], 200);
-    } else {
-      $this->response([
-        'status' => false,
-        'message' => 'Belum Ada History Payment'
-      ], 404);
-    }
+    $id = $this->userData['id_user'];
+
+    $list_history_payment = $this->paymentModel->getDatahistoryPaymentByIdUserPaginate($id, $this::$paginationLimit, $offset)->result_array();
+    $total_rows = count($list_history_payment);
+    $total_pages = ceil($total_rows / $this::$paginationLimit);
+
+    $this->response([
+      'status' => true,
+      'message' => 'Data merchant berhasil didapatkan!',
+      'data' => $list_history_payment,
+      'pagination' => array(
+        'total_pages' => $total_pages,
+        'current_page' => $page,
+        'total_rows' => $total_rows
+      )
+    ], 200);
   }
 }
