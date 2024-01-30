@@ -64,7 +64,10 @@ class Midtrans extends MX_Controller
             // Lakukan proses pembuatan transaksi di sini
             $no_order = date('YmdHis') . strtoupper(random_string('alnum', 8));
 
+            // $enable_payments = array('shopee');
+
             $payload = array(
+                // 'enabled_payments' => $enable_payments,
                 "transaction_details" => array(
                     "order_id" =>  $no_order,
                     "gross_amount" => (int) $merchant['total_harga_package_merchant'],
@@ -111,5 +114,27 @@ class Midtrans extends MX_Controller
                 ], 500);
             }
         }
+    }
+
+    public function callback_post()
+    {
+        $content_type = $this->input->server('HTTP_CONTENT_TYPE', true);
+
+        $data = [];
+
+        if (stripos($content_type, 'application/json') !== false) {
+            $json_input = file_get_contents('php://input');
+            $data = json_decode($json_input, true);
+        } else {
+            // Pengolahan form-data
+            $data['transactionStatus'] = $this->input->post('transactionStatus');
+            $data['transactionId'] = $this->input->post('transactionId');
+            $data['orderId'] = $this->input->post('orderId');
+            $data['paymentType'] = $this->input->post('paymentType');
+        }
+
+        // TODO : lakukkan apa yang harus kamu lakukan
+
+        
     }
 }
