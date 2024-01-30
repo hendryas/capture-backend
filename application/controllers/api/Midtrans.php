@@ -25,6 +25,7 @@ class Midtrans extends MX_Controller
         $this->load->model('user/User_model', 'userModel');
         $this->load->model('merchant/Merchant_model', 'merchantModel');
         $this->load->model('payment/Payment_model', 'paymentModel');
+        $this->load->model('notification/Notification_model', 'notificationModel');
         $this->authentication = new AuthenticationJWT($this);
         $this->midtrans = new MyMidtrans();
     }
@@ -97,6 +98,29 @@ class Midtrans extends MX_Controller
                     'created_at' => date('Y-m-d H:i:s'),
                 ];
                 $insertTransaction = $this->paymentModel->insertDataPayment($dataTransaction);
+
+                $dataNotificationCustomer = [
+                    'id_user' => $this->userData['id_user'],
+                    'id_merchant' => $merchant['id_merchant'],
+                    'name_user' => $this->userData['nama'],
+                    'fill_notification' => 'Pembelian berhasil, segera melakukan pembayaran!',
+                    'sts_notif' => 0,
+                    'delete_sts' => 0,
+                    'created_at' => date('Y-m-d H:i:s')
+                ];
+                $insertNotificationCustomer = $this->notificationModel->insertDataNotificationCustomer($dataNotificationCustomer);
+
+                $nama_merchant = $merchant['nama_merchant'];
+                $dataNotificationAdmin = [
+                    'id_user' => $this->userData['id_user'],
+                    'id_merchant' => $merchant['id_merchant'],
+                    'name_user' => $this->userData['nama'],
+                    'fill_notification' => "Nomor Order : ' .$no_order.' Melakukan Pembelian Paket Pada Merchant ' . $nama_merchant . ' !",
+                    'sts_notif' => 0,
+                    'delete_sts' => 0,
+                    'created_at' => date('Y-m-d H:i:s')
+                ];
+                $insertNotificationAdmin = $this->notificationModel->insertDataNotificationAdmin($dataNotificationAdmin);
                 // $data = $this->transactionModel
 
                 $data['token'] = $token;
@@ -135,6 +159,6 @@ class Midtrans extends MX_Controller
 
         // TODO : lakukkan apa yang harus kamu lakukan
 
-        
+
     }
 }
