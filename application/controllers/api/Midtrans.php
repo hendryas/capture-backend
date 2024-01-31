@@ -121,13 +121,13 @@ class Midtrans extends MX_Controller
                 ];
                 $insertNotificationAdmin = $this->notificationModel->insertDataNotificationAdmin($dataNotificationAdmin);
 
-                unset($dataTransaction['token']);
-                $data = array_merge($data, $dataTransaction);
+                // unset($dataTransaction['token']);
+                // $data = array_merge($data, $dataTransaction);
                 // If success
                 $this->response([
                     'message' => 'Berhasil membuat transaction',
                     'status' => true,
-                    'data' => $data,
+                    'data' => $dataTransaction,
                 ], 200);
             } else {
                 $this->response([
