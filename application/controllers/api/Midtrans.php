@@ -1,5 +1,6 @@
 <?php
 
+use Midtrans\Notification;
 use Restserver\Libraries\REST_Controller;
 
 defined('BASEPATH') or exit('No direct script access allowed');
@@ -7,7 +8,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
 require APPPATH . 'libraries/REST_Controller.php';
 require APPPATH . 'libraries/Format.php';
 // my code goes here
-
 class Midtrans extends MX_Controller
 {
     use REST_Controller {
@@ -142,9 +142,7 @@ class Midtrans extends MX_Controller
     public function callback_post()
     {
         $content_type = $this->input->server('HTTP_CONTENT_TYPE', true);
-
         $data = [];
-
         if (stripos($content_type, 'application/json') !== false) {
             $json_input = file_get_contents('php://input');
             $data = json_decode($json_input, true);
@@ -155,9 +153,60 @@ class Midtrans extends MX_Controller
             $data['orderId'] = $this->input->post('orderId');
             $data['paymentType'] = $this->input->post('paymentType');
         }
-
         // TODO : lakukkan apa yang harus kamu lakukan
-
-
+        // TODO : kasih notifkasi apabila statusnya settlement/pending "Terimakasih sudah melakukan pembayaran, silahkan tunggu kami menghubungi anda"
     }
+
+    /**
+     * Use this if you want to use the notification_post method, and set webhook in your midtrans account
+     * 
+     */
+    /*
+    public function notification_post()
+    {
+        $notif = $this->midtrans->notification();
+
+        if ($notif) {
+            $transaction = $notif->transaction_status;
+            $type = $notif->payment_type;
+            $order_id = $notif->order_id;
+            $fraud = $notif->fraud_status;
+
+            if ($transaction == 'capture') {
+                // For credit card transaction, we need to check whether transaction is challenge by FDS or not
+                if ($type == 'credit_card') {
+                    if ($fraud == 'challenge') {
+                        // TODO set payment status in merchant's database to 'Challenge by FDS'
+                        // TODO merchant should decide whether this transaction is authorized or not in MAP
+                        echo "Transaction order_id: " . $order_id . " is challenged by FDS";
+                    } else {
+                        // TODO set payment status in merchant's database to 'Success'
+                        echo "Transaction order_id: " . $order_id . " successfully captured using " . $type;
+                    }
+                }
+            } else if ($transaction == 'settlement') {
+                // TODO set payment status in merchant's database to 'Settlement'
+                echo "Transaction order_id: " . $order_id . " successfully transfered using " . $type;
+            } else if ($transaction == 'pending') {
+                // TODO set payment status in merchant's database to 'Pending'
+                echo "Waiting customer to finish transaction order_id: " . $order_id . " using " . $type;
+            } else if ($transaction == 'deny') {
+                // TODO set payment status in merchant's database to 'Denied'
+                echo "Payment using " . $type . " for transaction order_id: " . $order_id . " is denied.";
+            } else if ($transaction == 'expire') {
+                // TODO set payment status in merchant's database to 'expire'
+                echo "Payment using " . $type . " for transaction order_id: " . $order_id . " is expired.";
+            } else if ($transaction == 'cancel') {
+                // TODO set payment status in merchant's database to 'Denied'
+                echo "Payment using " . $type . " for transaction order_id: " . $order_id . " is canceled.";
+            }
+        } else {
+            $this->response([
+                'status' => false,
+                'message' => 'Gagal membuat token'
+            ], 500);
+        }
+    }
+    */
+
 }

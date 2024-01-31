@@ -18,7 +18,7 @@ class HistoryPayment extends MX_Controller
     REST_Controller::__construct as private __resTraitConstruct;
   }
 
-  private static $paginationLimit = 2;
+  private static $paginationLimit = 20;
   private $authentication;
 
   public function __construct()
@@ -46,7 +46,6 @@ class HistoryPayment extends MX_Controller
 
     $this->response([
       'status' => true,
-      'message' => 'Data merchant berhasil didapatkan!',
       'data' => $list_history_payment,
       'pagination' => array(
         'total_pages' => $total_pages,
