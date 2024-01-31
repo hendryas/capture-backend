@@ -39,6 +39,17 @@ class Payment_model extends CI_Model
     return $query;
   }
 
+  public function getData($no_order)
+  {
+    $this->db->select('a.id_rekap_pembayaran,a.status_pembayaran,a.no_order,b.nama_merchant,b.logo,b.total_harga_package_merchant,c.nama,a.created_at');
+    $this->db->where('no_order', $no_order);
+    $this->db->from('rekap_pembayaran_pelanggan a');
+    $this->db->join('merchant b', 'a.id_merchant = b.id_merchant', 'left');
+    $this->db->join('user c', 'a.id_user = c.id_user', 'left');
+    $query = $this->db->get();
+    return $query;
+  }
+
   public function updateDataTransaction($no_order, $data)
   {
     $this->db->where('no_order', $no_order);

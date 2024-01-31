@@ -120,15 +120,14 @@ class Midtrans extends MX_Controller
                     'created_at' => date('Y-m-d H:i:s')
                 ];
                 $insertNotificationAdmin = $this->notificationModel->insertDataNotificationAdmin($dataNotificationAdmin);
-                // $data = $this->transactionModel
 
-                $data['token'] = $token;
+                unset($dataTransaction['token']);
+                $data = array_merge($data, $dataTransaction);
                 // If success
                 $this->response([
                     'message' => 'Berhasil membuat transaction',
                     'status' => true,
                     'data' => $data,
-                    'data_transaction' => $dataTransaction
                 ], 200);
             } else {
                 $this->response([
@@ -160,56 +159,24 @@ class Midtrans extends MX_Controller
             'payment_type' => $data['paymentType'],
             'transactionId' => $data['transactionId']
         ];
-        $updateDataTransaction = $this->paymentModel->updateDataTransaction($no_order, $dataTransaction);
-        // TODO : kasih notifkasi apabila statusnya settlement/pending "Terimakasih sudah melakukan pembayaran, silahkan tunggu kami menghubungi anda"
+        $transaction = $this->paymentModel->getData($no_order)->row_array();
+        if ($transaction) {
+            $updateDataTransaction = $this->paymentModel->updateDataTransaction($no_order, $dataTransaction);
+            $transaction = $this->paymentModel->getData($no_order)->row_array();
 
-        $getDataHistoryPaymentCustomer = $this->paymentModel->getDataHistoryPaymentCustomerByNoOrder($no_order)->row_array();
-        $id_merchant = $getDataHistoryPaymentCustomer['id_merchant'];
-        $id_user = $getDataHistoryPaymentCustomer['id_user'];
+            $getDataHistoryPaymentCustomer = $this->paymentModel->getDataHistoryPaymentCustomerByNoOrder($no_order)->row_array();
+            $id_merchant = $getDataHistoryPaymentCustomer['id_merchant'];
+            $id_user = $getDataHistoryPaymentCustomer['id_user'];
 
-        // TODO : inisialisasi notifikasi by midtrans
-        $notif = $this->midtrans->notification();
-        $fill_notification = '';
-
-        if ($notif) {
-            $transaction = $notif->transaction_status;
-            $type = $notif->payment_type;
-            $order_id = $notif->order_id;
-            $fraud = $notif->fraud_status;
-
-            if ($transaction == 'capture') {
-                // For credit card transaction, we need to check whether transaction is challenge by FDS or not
-                if ($type == 'credit_card') {
-                    if ($fraud == 'challenge') {
-                        // TODO set payment status in merchant's database to 'Challenge by FDS'
-                        // TODO merchant should decide whether this transaction is authorized or not in MAP
-                        $fill_notification = "Transaction order_id: " . $order_id . " is challenged by FDS";
-                    } else {
-                        // TODO set payment status in merchant's database to 'Success'
-                        $fill_notification = "Transaction order_id: " . $order_id . " successfully captured using " . $type;
-                    }
-                }
-            } else if ($transaction == 'settlement') {
-                // TODO set payment status in merchant's database to 'Settlement'
-                $fill_notification = "Terimakasih sudah melakukan pembayaran, silahkan tunggu kami menghubungi anda";
-            } else if ($transaction == 'pending') {
-                // TODO set payment status in merchant's database to 'Pending'
-                $fill_notification = "Terimakasih sudah melakukan pembayaran, silahkan tunggu kami menghubungi anda";
-            } else if ($transaction == 'deny') {
-                // TODO set payment status in merchant's database to 'Denied'
-                $fill_notification = "Payment using " . $type . " for transaction order_id: " . $order_id . " is denied.";
-            } else if ($transaction == 'expire') {
-                // TODO set payment status in merchant's database to 'expire'
-                $fill_notification = "Payment using " . $type . " for transaction order_id: " . $order_id . " is expired.";
-            } else if ($transaction == 'cancel') {
-                // TODO set payment status in merchant's database to 'Denied'
-                $fill_notification = "Payment using " . $type . " for transaction order_id: " . $order_id . " is canceled.";
+            if ($data['transactionStatus'] == 'settlement') {
+                $fill_notification = 'Terimakasih sudah melakukan pembayaran, silahkan tunggu kami menghubungi anda';
             }
-
+            if ($data['transactionStatus'] == 'pending') {
+                $fill_notification = 'Pembayaran anda sedang dalam proses, silahkan tunggu kami menghubungi anda';
+            }
             $dataNotificationCustomer = [
                 'id_user' => $id_user,
                 'id_merchant' => $id_merchant,
-                'name_user' => $this->userData['nama'],
                 'fill_notification' => $fill_notification,
                 'sts_notif' => 0,
                 'delete_sts' => 0,
@@ -220,7 +187,6 @@ class Midtrans extends MX_Controller
             $dataNotificationAdmin = [
                 'id_user' => $id_user,
                 'id_merchant' => $id_merchant,
-                'name_user' => $this->userData['nama'],
                 'fill_notification' => "Nomor Order : ' .$no_order.' Telah Melakukan Pembayaran !",
                 'sts_notif' => 0,
                 'delete_sts' => 0,
@@ -231,14 +197,13 @@ class Midtrans extends MX_Controller
             $this->response([
                 'message' => 'Berhasil update transaction dan membuat notifikasi customer',
                 'status' => true,
-                'data' => $data,
-                'data_transaction' => $dataTransaction
+                'data' => $transaction,
             ], 200);
         } else {
             $this->response([
+                'message' => 'Gagal mendapatkan data',
                 'status' => false,
-                'message' => 'Gagal membuat token'
-            ], 500);
+            ], 404);
         }
     }
 
