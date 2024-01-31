@@ -38,4 +38,28 @@ class Payment_model extends CI_Model
     $query = $this->db->get();
     return $query;
   }
+
+  public function updateDataTransaction($no_order, $data)
+  {
+    $this->db->where('no_order', $no_order);
+    $this->db->update('rekap_pembayaran_pelanggan', $data);
+
+    $update = $this->db->affected_rows();
+
+    if ($update == 1) {
+      return TRUE;
+    } else {
+      return FALSE;
+    }
+  }
+
+  public function getDataHistoryPaymentCustomerByNoOrder($no_order)
+  {
+    $this->db->select('a.*');
+    $this->db->where('a.no_order', $no_order);
+    $this->db->from('rekap_pembayaran_pelanggan a');
+
+    $query = $this->db->get();
+    return $query;
+  }
 }
