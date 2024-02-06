@@ -13,9 +13,9 @@ class AuthenticationJWT
     public function authenticateUser()
     {
         $headers = $this->controller->input->request_headers();
-
-        if (isset($headers['authorization'])) {
-            $decodedToken = $this->controller->authorization_token->validateToken($headers['authorization']);
+        $authToken = $headers['Authorization'] ??  $headers['authorization'];
+        if (isset($authToken)) {
+            $decodedToken = $this->controller->authorization_token->validateToken($authToken);
 
             if ($decodedToken['status']) {
                 // Set user data to be used across the controller

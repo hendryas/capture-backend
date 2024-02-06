@@ -30,7 +30,7 @@ class Notification extends MX_Controller
     $this->load->model('user/User_model', 'userModel');
     $this->load->model('notification/Notification_model', 'notificationModel');
     $this->authentication = new AuthenticationJWT($this);
-    $this->authentication->authenticateUser(); // Call here If authentication is required for all endpoints
+    $this->authentication->authenticateUser(); 
   }
 
   public function notification_customer_get()

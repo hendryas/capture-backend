@@ -43,23 +43,17 @@ class Profile extends MX_Controller
         // Periksa tipe konten permintaan
         $content_type = $this->input->server('HTTP_CONTENT_TYPE', true);
 
-        // Inisialisasi data
-        $data = [];
+        $json_input = file_get_contents('php://input');
+        $dataJson = json_decode($json_input, true);
 
-        if (stripos($content_type, 'application/json') !== false) {
-            // Pengolahan JSON
-            $json_input = file_get_contents('php://input');
-            $data = json_decode($json_input, true);
-        } else {
-            // Pengolahan form-data
-            $data['nama'] = $this->input->post('nama');
-            $data['username'] = $this->input->post('username');
-            $data['email'] = $this->input->post('email');
-            $data['phone'] = $this->input->post('phone');
-            $data['password'] = $this->input->post('password');
-            $data['updated_at'] = date('Y-m-d H:i:s');
-            $data['foto_user'] = isset($_FILES['foto_user']) ? $_FILES['foto_user']['name'] : '';
-        }
+        // Pengolahan form-data
+        $data['nama'] = $this->input->post('nama') ??  $dataJson['nama'] ?? null;
+        $data['username'] = $this->input->post('username') ??  $dataJson['username'] ?? null;
+        $data['email'] = $this->input->post('email') ??  $dataJson['email'] ?? null;
+        $data['phone'] = $this->input->post('phone') ??  $dataJson['phone'] ?? null;
+        $data['password'] = $this->input->post('password') ?? $dataJson['password'] ?? null;
+        $data['updated_at'] = date('Y-m-d H:i:s');
+        $data['foto_user'] = isset($_FILES['foto_user']) ? $_FILES['foto_user']['name'] : '';
 
         // Set validation rules
         $this->form_validation->set_data($data);
@@ -103,7 +97,7 @@ class Profile extends MX_Controller
             } else {
                 unset($data['password']);
             }
-            
+
             $update = $this->userModel->updateDataUserById($this->userData['id_user'], $data);
             if ($update) {
                 $cek = $this->userModel->getDataUserById($this->userData['id_user'])->row_array();

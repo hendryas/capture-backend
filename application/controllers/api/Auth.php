@@ -34,16 +34,12 @@ class Auth extends MX_Controller
   {
     $content_type = $this->input->server('HTTP_CONTENT_TYPE', true);
     $data = [];
-
-    if (stripos($content_type, 'application/json') !== false) {
-      // Pengolahan JSON
-      $json_input = file_get_contents('php://input');
-      $data = json_decode($json_input, true);
-    } else {
-      // Pengolahan form-data
-      $data['email'] = $this->input->post('email');
-      $data['password'] = $this->input->post('password');
-    }
+    
+    $json_input = file_get_contents('php://input');
+    $dataJson = json_decode($json_input, true);
+    
+    $data['email'] = $this->input->post('email') ?? $dataJson['email'] ?? null;
+    $data['password'] = $this->input->post('password') ?? $dataJson['password'] ?? null;
 
     // Set validation rules
     $this->form_validation->set_data($data);
@@ -78,27 +74,18 @@ class Auth extends MX_Controller
     }
   }
 
-
   public function register_post()
   {
-    // Periksa tipe konten permintaan
-    $content_type = $this->input->server('HTTP_CONTENT_TYPE', true);
-
-    // Inisialisasi data
     $data = [];
+    
+    $json_input = file_get_contents('php://input');
+    $dataJson = json_decode($json_input, true);
 
-    if (stripos($content_type, 'application/json') !== false) {
-      // Pengolahan JSON
-      $json_input = file_get_contents('php://input');
-      $data = json_decode($json_input, true);
-    } else {
-      // Pengolahan form-data
-      $data['nama'] = $this->input->post('nama');
-      $data['email'] = $this->input->post('email');
-      $data['password'] = $this->input->post('password');
-      $data['confirm_password'] = $this->input->post('confirm_password');
-    }
-
+    $data['nama'] = $this->input->post('nama') ?? $dataJson['nama'] ?? null;
+    $data['email'] = $this->input->post('email') ?? $dataJson['email'] ?? null;
+    $data['password'] = $this->input->post('password') ?? $dataJson['password'] ?? null;;
+    $data['confirm_password'] = $this->input->post('confirm_password') ?? $dataJson['confirm_password'] ?? null;
+    
     // Set validation rules
     $this->form_validation->set_data($data);
     $this->form_validation->set_rules('nama', 'Nama', 'required|trim');
@@ -107,7 +94,6 @@ class Auth extends MX_Controller
     $this->form_validation->set_rules('confirm_password', 'Password', 'required|trim|matches[password]');
 
     if ($this->form_validation->run() == FALSE) {
-      // Validation failed
       $this->response(['status' => false, 'error' => $this->form_validation->error_array()], 422);
     } else {
       // Validation passed, proceed with registration

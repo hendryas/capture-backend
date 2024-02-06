@@ -40,14 +40,10 @@ class Midtrans extends MX_Controller
         // Inisialisasi data
         $data = [];
 
-        if (stripos($content_type, 'application/json') !== false) {
-            // Pengolahan JSON
-            $json_input = file_get_contents('php://input');
-            $data = json_decode($json_input, true);
-        } else {
-            // Pengolahan form-data
-            $data['merchant_id'] = $this->input->post('merchant_id');
-        }
+        $json_input = file_get_contents('php://input');
+        $dataJson = json_decode($json_input, true);
+
+        $data['merchant_id'] = $this->input->post('merchant_id') ??  $dataJson['merchant_id'] ?? null;
 
         $this->form_validation->set_data($data);
         $this->form_validation->set_rules('merchant_id', 'Merchant ID', 'required|trim');
@@ -142,17 +138,15 @@ class Midtrans extends MX_Controller
     {
         $content_type = $this->input->server('HTTP_CONTENT_TYPE', true);
         $data = [];
-        if (stripos($content_type, 'application/json') !== false) {
-            $json_input = file_get_contents('php://input');
-            $data = json_decode($json_input, true);
-        } else {
-            // Pengolahan form-data
-            $data['transactionStatus'] = $this->input->post('transactionStatus');
-            $data['transactionId'] = $this->input->post('transactionId');
-            $data['orderId'] = $this->input->post('orderId');
-            $data['paymentType'] = $this->input->post('paymentType');
-        }
-        // TODO : lakukkan apa yang harus kamu lakukan
+
+        $json_input = file_get_contents('php://input');
+        $dataJson = json_decode($json_input, true);
+
+        $data['transactionStatus'] = $this->input->post('transactionStatus') ?? $dataJson['transactionStatus'] ?? null;
+        $data['transactionId'] = $this->input->post('transactionId') ?? $dataJson['transactionId'] ?? null;
+        $data['orderId'] = $this->input->post('orderId') ?? $dataJson['orderId'] ?? null;
+        $data['paymentType'] = $this->input->post('paymentType') ?? $dataJson['paymentType'] ?? null;
+
         $no_order = isset($data['orderId']) ? $data['orderId'] : '';
         $dataTransaction = [
             'status_pembayaran' => $data['transactionStatus'],
